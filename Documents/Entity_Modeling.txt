@@ -12,11 +12,12 @@
 //     •	Owner Name : String
 //     •	Mobile No : string
 //     •	Email : string
-//     •	Adhar No : 
-//     •	Profilce Pic :(url)string
+//     •	Aadhar No : 
+//     •	Profile Pic :(url)string
 //     •	Document: (url)string
 //     •	Address : string
 //     •	Note : string
+//     *    UserType. 
 //     •	ISACTIVE : bool {1:Active, 0:Inactive}
 
 //     [Audit colums to keep track]
@@ -37,7 +38,8 @@
 //     •	PropertyPic : string
 //     •	PropertyDescription : string
 //     •	PropertyFacility : string
-//     •	OwnerId : long
+//     *    RentelType: long? default : montely
+//     •	OwnerId : long FK
 //     •	PropertyAddress : string
 //     •	Note : string
 //     [Audit colums to keep track]
@@ -51,7 +53,7 @@
 // Room
 // {
 //     RoomNo : long
-//     propertyId : long
+//     propertyId : long FK
 //     RoomType : string
 //     RoomSize : string
 //     RoomRent : double
@@ -59,8 +61,9 @@
 //     RoomPic : string
 //     RoomDescription : string
 //     RoomFacility : string
-//     RoomOwner : long
+//     OwnerId : long FK
 //     RoomAddress : string
+//     RentelType : long? : monthely
 //     Note : string
 //     [Audit colums to keep track]
 //     •    createdBy: long
@@ -71,10 +74,15 @@
 // }
 
 
+// RentalType{
+    Monthly : 1
+    Lease : 2
+}
+
 
 // Tenant
 // {
-//     TenantId : long
+//     TenantId : long PK
 //     TenantName : string
 //     TenantMobile : string
 //     TenantEmail : string
@@ -90,8 +98,8 @@
 //     Expected_Deposit_Return_When_Leaving : double
 //     StartDate : Date?nullable
 //     EndDate : Date?nullable
-//     OwnerId : long
-//     PropertyId : long
+//     OwnerId : long FK
+//     PropertyId : long FK
 //     RoomNo : long
 //     [Audit colums to keep track]
 //     •    createdBy: long
@@ -103,12 +111,12 @@
 
 // Rent
 // {
-//     RentId : long
+//     RentId : long PK
 //     RentDate : Date
 //     RentAmount : double
 //     RentStatus : int {1:Paid, 0:Unpaid, 2:Partial}
 //     RentNote : string
-//     TenantId : long
+//     TenantId : long FK
 //     RoomNo : long
 //     [Audit colums to keep track]
 //     •    createdBy: long
@@ -143,7 +151,7 @@
 
 // ER diagram for the above entities
 // +----------------+            +-------------------+           +----------------+           +---------------+           +--------------+
-// |     Owners     |            |      Property     |           |     Room       |           |    Tenant      |           |     Rent      |
+// |     User     |            |      Property     |           |     Room       |           |    Tenant      |           |     Rent      |
 // |----------------|            |-------------------|           |----------------|           |----------------|           |--------------|
 // | OwnerId (PK)   | 1        n | PropertyId (PK)   | 1       n | RoomNo (PK)    | 1       n | TenantId (PK)  | 1       n | RentId (PK)   |
 // | OwnerName      |------------| OwnerId (FK)      |-----------| PropertyId (FK)|-----------| TenantRoomNo (FK)|----------| TenantId (FK) |
