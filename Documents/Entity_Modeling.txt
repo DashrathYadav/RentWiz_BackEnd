@@ -1,23 +1,37 @@
 // Entity Models
 
 //Admin{
-//
+//{
+//  AdminId : long Pk
+//  loginId : long
+//  password : string
+//  AdminName : string
+//  MobileNo : string
+//  Email : string
+//  ISACTIVE : bool {1:Active, 0:Inactive}
+//  [Audit colums to keep track]
+//  createdBy: long
+//  LastModifiedBy: long
+//  CreattiionDate: Date
+//  LastModificationDate: Date
 //}
+
 
 // Owners
 // {
 //     •	OwnerId : long Pk
-//         loginId : long
+//          loginId : long
 //          password : string
 //     •	Owner Name : String
 //     •	Mobile No : string
 //     •	Email : string
-//     •	Aadhar No : 
-//     •	Profile Pic :(url)string
+//     •	Adhar No : 
+//     •	Profilce Pic :(url)string
 //     •	Document: (url)string
 //     •	Address : string
 //     •	Note : string
-//     *    UserType. 
+//     •    Password: string  
+//     •    newPassword: string  
 //     •	ISACTIVE : bool {1:Active, 0:Inactive}
 
 //     [Audit colums to keep track]
@@ -38,8 +52,7 @@
 //     •	PropertyPic : string
 //     •	PropertyDescription : string
 //     •	PropertyFacility : string
-//     *    RentelType: long? default : montely
-//     •	OwnerId : long FK
+//     •	OwnerId : long Fk
 //     •	PropertyAddress : string
 //     •	Note : string
 //     [Audit colums to keep track]
@@ -52,8 +65,9 @@
 
 // Room
 // {
-//     RoomNo : long
-//     propertyId : long FK
+//     RoomNo : long Pk
+//     propertyId : long Fk
+//     OwnerId : long Fk
 //     RoomType : string
 //     RoomSize : string
 //     RoomRent : double
@@ -61,28 +75,22 @@
 //     RoomPic : string
 //     RoomDescription : string
 //     RoomFacility : string
-//     OwnerId : long FK
 //     RoomAddress : string
-//     RentelType : long? : monthely
+//     RoomCapacity : long
+//     CurrentTenantCount : long
 //     Note : string
 //     [Audit colums to keep track]
 //     •    createdBy: long
 //     •	LastModifiedBy: long
 //     •	CreattiionDate: Date
 //     •	LastModificationDate: Date
-
 // }
 
-
-// RentalType{
-    Monthly : 1
-    Lease : 2
-}
 
 
 // Tenant
 // {
-//     TenantId : long PK
+//     TenantId : long
 //     TenantName : string
 //     TenantMobile : string
 //     TenantEmail : string
@@ -98,8 +106,8 @@
 //     Expected_Deposit_Return_When_Leaving : double
 //     StartDate : Date?nullable
 //     EndDate : Date?nullable
-//     OwnerId : long FK
-//     PropertyId : long FK
+//     OwnerId : long
+//     PropertyId : long
 //     RoomNo : long
 //     [Audit colums to keep track]
 //     •    createdBy: long
@@ -111,12 +119,12 @@
 
 // Rent
 // {
-//     RentId : long PK
+//     RentId : long
 //     RentDate : Date
 //     RentAmount : double
 //     RentStatus : int {1:Paid, 0:Unpaid, 2:Partial}
 //     RentNote : string
-//     TenantId : long FK
+//     TenantId : long
 //     RoomNo : long
 //     [Audit colums to keep track]
 //     •    createdBy: long
@@ -151,7 +159,7 @@
 
 // ER diagram for the above entities
 // +----------------+            +-------------------+           +----------------+           +---------------+           +--------------+
-// |     User     |            |      Property     |           |     Room       |           |    Tenant      |           |     Rent      |
+// |     Owners     |            |      Property     |           |     Room       |           |    Tenant      |           |     Rent      |
 // |----------------|            |-------------------|           |----------------|           |----------------|           |--------------|
 // | OwnerId (PK)   | 1        n | PropertyId (PK)   | 1       n | RoomNo (PK)    | 1       n | TenantId (PK)  | 1       n | RentId (PK)   |
 // | OwnerName      |------------| OwnerId (FK)      |-----------| PropertyId (FK)|-----------| TenantRoomNo (FK)|----------| TenantId (FK) |
@@ -167,9 +175,9 @@
 // | LastModifiedBy |            | Note              |           | Note           |           | Deposited      |           |               |
 // | CreationDate   |            | createdBy         |           | createdBy      |           | Expected_Deposit|           |               |
 // | LastModificationDate|       | LastModifiedBy    |           | LastModifiedBy |           | Return_When_Leaving|        |               |
-// +----------------+            | CreationDate      |           | CreationDate   |           | StartDate      |           |               |
-//                               | LastModificationDate|         | LastModificationDate|       | EndDate        |           |               |
-//                               +-------------------+           +----------------+           | OwnerId (FK)   |           +--------------+
+// | Password       |            | CreationDate      |           | CreationDate   |           | StartDate      |           |               |
+// | NewPassword    |            | LastModificationDate|         | LastModificationDate|       | EndDate        |           |               |
+//  +----------------+           +-------------------+           +----------------+           | OwnerId (FK)   |           +--------------+
 //                                                                                           | PropertyId (FK) |
 //                                                                                           | RoomNo (FK)     |
 //                                                                                           | createdBy       |
