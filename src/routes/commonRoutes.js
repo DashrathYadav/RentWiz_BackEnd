@@ -10,5 +10,7 @@ const router = express.Router();
 
 
 router.post("/getProfile", verifyToken, commonController.getProfile);
+router.post("/getProperty",verifyToken, commonController.getProperty);
+// router.post("/getProfile", verifyToken, commonController.getProfile);
 
 module.exports = router;

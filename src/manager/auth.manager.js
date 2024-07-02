@@ -75,21 +75,21 @@ class AuthManager {
 				const hashedPassword = await securePassword(req.body.password);
 				let otp = utility.randomNumber(4);
 
-				let html =
-					"<p>Please Confirm your Account. OTP is valid till 10 minutes.</p><p>OTP: " +
-					otp +
-					"</p>";
-				await mailer
-					.send(
-						emailConst.confirmEmails.from,
-						req.body.email,
-						"Confirm Account",
-						html
-					)
-					.then(async function (result) {
+				// let html =
+				// 	"<p>Please Confirm your Account. OTP is valid till 10 minutes.</p><p>OTP: " +
+				// 	otp +
+				// 	"</p>";
+				// await mailer
+				// 	.send(
+				// 		emailConst.confirmEmails.from,
+				// 		req.body.email,
+				// 		"Confirm Account",
+				// 		html
+				// 	)
+				// 	.then(async function (result) {
 						const user = await authData.registerUser(req, hashedPassword, otp);
 						userModel = user[0];
-					});
+					// });
 
 				//const user = await authData.registerUser(req, hashedPassword, otp);
 				//userModel = user[0];

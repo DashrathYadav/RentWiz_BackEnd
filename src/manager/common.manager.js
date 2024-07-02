@@ -39,6 +39,23 @@ class CommonManager {
     }
 
 
+    
+    async getProperty(req) {
+        try {
+            var userModel = {};
+            const userRes = await commonData.getProperty(req);
+            if (userRes.length > 0) {
+                userModel = userRes[0];
+            }
+            return userModel;
+        } catch (error) {
+            let errorLog = error.name + ": " + error.message;
+            logger.error(errorLog);
+            logManager.generateAPILog(req, "", errorLog, 1);
+        }
+    }
+
+
 }
 
 module.exports = CommonManager;

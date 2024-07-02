@@ -34,6 +34,28 @@ async getProfile(req, res) {
     }
   }
 
+  async getProperty(req, res) {
+    try {
+     
+     
+      var result = await commonManager.getProperty(req);
+      if (result) {
+        return apiResponse.successResponseWithData(
+          res,
+          "Get Property fetched succesfully",
+          result
+        );
+      } else {
+        return apiResponse.forbiddenRequest(
+          res,
+          "Error while fetching Data"
+        );
+      }
+    } catch (error) {
+      return apiResponse.expectationFailedResponse(res, error);
+    }
+  }
+
 
 }
 

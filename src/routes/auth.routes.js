@@ -1,7 +1,7 @@
 const express = require("express");
 
 // const loginValidation = require("../models/request/login.validator");
-// const userValidation = require("../models/request/user.validator");
+const userValidation = require("../models/request/user.validator");
 const { AuthController } = require("../controllers/auth.controller");
 
 const authController = new AuthController(); 
