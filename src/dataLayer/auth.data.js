@@ -17,33 +17,10 @@ class AuthData {
     const procedureName = authProcs.proc_ValidateUser;
     try {
       const user = await db.query(
-        `CALL ${procedureName}(:email, :mobileNumber)`,
+        `SELECT * FROM users WHERE loginId = :loginId OR mobileNumber = :mobileNumber OR email = :email`,
         {
-          replacements: { email, mobileNumber },
-          type: db.QueryTypes.RAW,
-        }
-      );
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  /**
-   * Validate User.
-   * @param {model} login.validators
-   * @returns {Object}
-   */
-  async validateUser(req) {
-    const email = req.body.email;
-    const mobileNumber = req.body.mobileNumber;
-    const procedureName = "usp_ValidateUser";
-    try {
-      const user = await db.query(
-        `CALL ${procedureName}(:email,:mobileNumber)`,
-        {
-          replacements: { email, mobileNumber },
-          type: db.QueryTypes.RAW,
+          replacements: { loginId, mobileNumber, email },
+          type: db.QueryTypes.SELECT,
         }
       );
       console.log("user", user);
