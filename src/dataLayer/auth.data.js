@@ -1,5 +1,5 @@
 const db = require("../../config/database");
-const authProcs = require("../helpers/dbProcConst");
+const {authProcs} = require("../helpers/dbProcConst");
 
 /**
  * Auth Data.
@@ -37,7 +37,7 @@ class AuthData {
   async validateUser(req) {
     const email = req.body.email;
     const mobileNumber = req.body.mobileNumber;
-    const procedureName = "usp_ValidateUser";
+    const procedureName = "proc_ValidateUser";
     try {
       const user = await db.query(
         `CALL ${procedureName}(:email,:mobileNumber)`,

@@ -1,6 +1,8 @@
 const apiResponse = require("../helpers/apiResponse.js");
 const AuthManager = require('../manager/auth.manager.js')
+
 const authManager = new AuthManager();
+
 
 class AuthController {
 	/**
@@ -10,6 +12,7 @@ class AuthController {
 	 */
 	async userLogin(req, res) {
 		try {
+           
 			let deviceType = req.headers["device-type"];
 			req.body.deviceType = deviceType;
 			var result = await authManager.userLogin(req);

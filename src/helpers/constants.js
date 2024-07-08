@@ -2,10 +2,10 @@
 exports.emailConst = {
     admin: {
         name: "Admin",
-        email: "nodeaha@gmail.com",
+        email: "rent.wizard05@gmail.com",
     },
     confirmEmails: {
-        from: "nodeaha@gmail.com",
+        from: "rent.wizard05@gmail.com",
     },
 };
 

@@ -11,10 +11,11 @@ const AuthData = require("../dataLayer/auth.data.js");
 const bcrypt = require("bcryptjs");
 const  LogManager  = require("./log.manager.js");
 const logger = require("../helpers/logger.js");
+const CommonData=require('../dataLayer/common.data.js')
 const { log } = require("console");
 const logManager = new LogManager();
 const authData = new AuthData();
-
+const commonData = new CommonData();
 
 class AuthManager {
 	/**
@@ -79,13 +80,15 @@ class AuthManager {
 				// 	"<p>Please Confirm your Account. OTP is valid till 10 minutes.</p><p>OTP: " +
 				// 	otp +
 				// 	"</p>";
-				// await mailer
-				// 	.send(
-				// 		emailConst.confirmEmails.from,
-				// 		req.body.email,
-				// 		"Confirm Account",
-				// 		html
-				// 	)
+
+             const mailResult=   await commonData.applicationEmail({
+                    otp,
+                    fileName: "otpForUserRegistration.ejs",
+                    subject:"otp for Registration of user"
+
+                });
+                console.log("mailResult",mailResult);
+				 
 				// 	.then(async function (result) {
 						const user = await authData.registerUser(req, hashedPassword, otp);
 						userModel = user[0];
