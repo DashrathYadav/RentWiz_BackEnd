@@ -1,5 +1,5 @@
 const joi = require("joi");
-const apiResponse = require("../../helpers/apiResponse");
+const apiResponse = require("../../../helpers/apiResponse");
 
 const validation = joi.object({
   loginId: joi
@@ -17,7 +17,7 @@ const validation = joi.object({
       "string.min": `{#key} length must be at least {{#limit}} characters long`,
       "string.max": `{#key} length must be less than or equal to {{#limit}} characters long`,
     }),
-  passWord: joi
+  password: joi
     .string()
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
@@ -41,7 +41,7 @@ const validation = joi.object({
     }),
   fullName: joi
     .string()
-    .alphanum()
+    .pattern(/^[a-zA-Z\s]+$/)
     .min(3)
     .max(25)
     .trim(true)
@@ -49,7 +49,7 @@ const validation = joi.object({
     .empty()
     .messages({
       "string.empty": `{#key} cannot be an empty field`,
-      "string.alphanum": `{#key} must only contain alpha-numeric characters`,
+      "string.pattern.base": `{#key} must only contain alphabetic characters`,
       "any.required": `{#key} is a required field`,
       "string.min": `{#key} length must be at least {{#limit}} characters long`,
       "string.max": `{#key} length must be less than or equal to {{#limit}} characters long`,
@@ -116,7 +116,7 @@ const validation = joi.object({
 const userValidation = async (req, res, next) => {
   const payload = {
     loginId: req.body.loginId,
-    passWord: req.body.passWord,
+    password: req.body.password,
     newPassword: req.body.newPassword,
     fullName: req.body.fullName,
     mobileNumber: req.body.mobileNumber,
