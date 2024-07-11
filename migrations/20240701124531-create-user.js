@@ -14,7 +14,7 @@ module.exports = {
         required: true,
         unique: true,
       },
-      passWord: {
+      password: {
         type: Sequelize.STRING,
         required: true,
       },

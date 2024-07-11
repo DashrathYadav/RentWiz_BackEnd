@@ -7,7 +7,7 @@ module.exports = {
       {
         userId: 1,
         loginId: "john_doe",
-        passWord: "password123",
+        password: "password123",
         newPassword: "newpassword123",
         fullName: "John Doe",
         mobileNumber: "1234567890",
@@ -28,7 +28,7 @@ module.exports = {
       {
         userId: 2,
         loginId: "jane_smith",
-        passWord: "password456",
+        password: "password456",
         newPassword: "newpassword456",
         fullName: "Jane Smith",
         mobileNumber: "2345678901",
@@ -49,7 +49,7 @@ module.exports = {
       {
         userId: 3,
         loginId: "alice_jones",
-        passWord: "password789",
+        password: "password789",
         newPassword: "newpassword789",
         fullName: "Alice Jones",
         mobileNumber: "3456789012",
@@ -70,7 +70,7 @@ module.exports = {
       {
         userId: 4,
         loginId: "bob_brown",
-        passWord: "password101",
+        password: "password101",
         newPassword: "newpassword101",
         fullName: "Bob Brown",
         mobileNumber: "4567890123",
@@ -91,7 +91,7 @@ module.exports = {
       {
         userId: 5,
         loginId: "charlie_davis",
-        passWord: "password202",
+        password: "password202",
         newPassword: "newpassword202",
         fullName: "Charlie Davis",
         mobileNumber: "5678901234",

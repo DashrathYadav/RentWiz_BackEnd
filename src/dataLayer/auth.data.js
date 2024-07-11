@@ -1,26 +1,26 @@
+const { compareSync } = require("bcryptjs");
 const db = require("../../config/database");
 const authProcs = require("../helpers/dbProcConst");
+const Table = require("../helpers/tableNameConst");
 
 /**
  * Auth Data.
  */
 class AuthData {
   /**
-   * User Login.
-   * @param {model} login.validators
+   * Get User by Email.
+   * @param {String} email
    * @returns {Object}
    */
-  async userLogin(req) {
-    const email = req.body.email;
-    const mobileNumber =
-      req.body.mobileNumber != undefined ? req.body.mobileNumber : "";
-    const procedureName = authProcs.proc_ValidateUser;
+  async getUserByEmail(email) {
+    //use sql query to get user by email
     try {
+      let userTable = Table.USERS;
       const user = await db.query(
-        `CALL ${procedureName}(:email, :mobileNumber)`,
+        `SELECT * FROM ${Table.USERS} WHERE email = :email`,
         {
-          replacements: { email, mobileNumber },
-          type: db.QueryTypes.RAW,
+          replacements: { email },
+          type: db.QueryTypes.SELECT,
         }
       );
       return user;
@@ -30,23 +30,20 @@ class AuthData {
   }
 
   /**
-   * Validate User.
-   * @param {model} login.validators
+   * Get User by Mobile Number.
+   * @param {String} mobileNumber
    * @returns {Object}
-   */
-  async validateUser(req) {
-    const email = req.body.email;
-    const mobileNumber = req.body.mobileNumber;
-    const procedureName = "usp_ValidateUser";
+   * */
+  async getUserByMobileNumber(mobileNumber) {
+    //use sql query to get user by mobile number
     try {
       const user = await db.query(
-        `CALL ${procedureName}(:email,:mobileNumber)`,
+        `SELECT * FROM ${Table.USERS} WHERE mobileNumber = :mobileNumber`,
         {
-          replacements: { email, mobileNumber },
-          type: db.QueryTypes.RAW,
+          replacements: { mobileNumber },
+          type: db.QueryTypes.SELECT,
         }
       );
-      console.log("user", user);
       return user;
     } catch (error) {
       throw error;
@@ -54,29 +51,79 @@ class AuthData {
   }
 
   /**
-   * Validate User.
-   * @param {model} login.validators
+   * Get User by Login Id.
+   * @param {String} loginId
    * @returns {Object}
-   */
-  async registerUser(req, password, confirmOTP) {
-    const { firstName, lastName, email, mobileNumber } = req.body;
-    const procedureName = "usp_Registration";
+   * */
+  async getUserByLoginId(loginId) {
+    //use sql query to get user by login id
+    let userTable = Table.USERS;
     try {
       const user = await db.query(
-        `CALL ${procedureName}(:firstName,:lastName, :email, :password, :mobileNumber, :confirmOTP)`,
+        `SELECT * FROM ${Table.USERS} WHERE loginId = :loginId`,
+        {
+          replacements: { loginId },
+          type: db.QueryTypes.SELECT,
+        }
+      );
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Create User.
+   * @param {Object} user
+   * @returns {Object}
+   * */
+  async createUser(user) {
+    try {
+      const {
+        loginId,
+        password,
+        fullName,
+        mobileNumber,
+        phoneNumber,
+        email,
+        aadharNumber,
+        profilePic,
+        document,
+        address,
+        roleId,
+        note,
+        isActive,
+        createdBy,
+        lastModifiedBy,
+        creationDate,
+        lastModificationdDate,
+      } = user;
+      // sql query to insert user
+      const result = await db.query(
+        ` INSERT INTO ${Table.USERS} (loginId, password, fullName, mobileNumber, phoneNumber, email, aadharNumber, profilePic, document, address, roleId, note, isActive, createdBy, lastModifiedBy)
+          VALUES (:loginId, :password, :fullName, :mobileNumber, :phoneNumber, :email, :aadharNumber, :profilePic, :document, :address, :roleId, :note, :isActive, :createdBy, :lastModifiedBy)`,
         {
           replacements: {
-            firstName,
-            lastName,
-            email,
+            loginId,
             password,
+            fullName,
             mobileNumber,
-            confirmOTP,
+            phoneNumber,
+            email,
+            aadharNumber,
+            profilePic,
+            document,
+            address,
+            roleId,
+            note,
+            isActive,
+            createdBy,
+            lastModifiedBy,
           },
-          type: db.QueryTypes.RAW,
+          type: db.QueryTypes.INSERT,
         }
       );
-      return user;
+      return result;
     } catch (error) {
       throw error;
     }
