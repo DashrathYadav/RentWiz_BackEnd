@@ -1,7 +1,7 @@
 const { compareSync } = require("bcryptjs");
 const db = require("../../config/database");
-const authProcs = require("../helpers/dbProcConst");
-const Table = require("../helpers/tableNameConst");
+const authProcs = require("../helpers/CONSTANTS/dbProcConst");
+const Table = require("../helpers/CONSTANTS/tableNameConst");
 
 /**
  * Auth Data.

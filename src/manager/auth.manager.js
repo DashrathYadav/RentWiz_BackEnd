@@ -3,10 +3,11 @@ const UserModel = require("../models/response/outerUserViewModel.js");
 const jwt = require("jsonwebtoken");
 const mailer = require("../helpers/mailer.js");
 const utility = require("../helpers/utility.js");
-const { emailConst } = require("../helpers/constants.js");
+const { emailConst } = require("../helpers/CONSTANTS/constants.js");
 const securePassword = require("../helpers/securePassword.js");
 const models = require("../../models");
 const AuthData = require("../dataLayer/auth.data.js");
+const AddressData = require("../dataLayer/address.data.js");
 const bcrypt = require("bcryptjs");
 const LogManager = require("./log.manager.js");
 const logger = require("../helpers/logger.js");
@@ -16,6 +17,7 @@ const { add } = require("winston");
 const e = require("express");
 const logManager = new LogManager();
 const authData = new AuthData();
+const addressData = new AddressData();
 
 class AuthManager {
   /**
@@ -107,6 +109,28 @@ class AuthManager {
       //hash the password
       const hashedPassword = await securePassword(req.body.password);
 
+      // Address creation
+      const newAddress = {
+        street: req.body.street,
+        landMark: req.body.landMark,
+        area: req.body.area,
+        cityId: req.body.cityId,
+        pincode: req.body.pincode,
+        stateId: req.body.stateId,
+        countryId: req.body.countryId,
+      };
+
+      //save address in database and get the address data;
+      let addressResult = await addressData.createAddress(newAddress);
+      const newCreatedAddress = addressResult[0];
+      //If address not created then return error
+      if (newCreatedAddress == null || newCreatedAddress == undefined) {
+        return {
+          status: 500,
+          message: "Internal server error",
+        };
+      }
+
       //create new user
       let newUser = {
         loginId: req.body.loginId,
@@ -121,7 +145,7 @@ class AuthManager {
         //save document in some online storage and save the link here
         document: req.body.document,
         // create a address and store the address id here
-        address: Math.floor(Math.random() * 10) + 1,
+        address: newCreatedAddress.addressId,
         roleId: req.body.roleId,
         note: req.body.note,
         isActive: true,

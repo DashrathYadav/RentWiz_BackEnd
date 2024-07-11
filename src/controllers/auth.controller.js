@@ -21,7 +21,7 @@ class AuthController {
           email: result.email,
           roleId: result.roleId,
         });
-        res.setHeader("Authorization", token);
+        res.setHeader("x-access-token", token);
 
         return apiResponse.successResponseWithData(
           res,
@@ -39,11 +39,6 @@ class AuthController {
     }
   }
 
-  /**
-   * User Registration.
-   * @param {model} user.validators
-   * @returns {Object}
-   */
   async userRegistration(req, res) {
     try {
       let deviceType = req.headers["device-type"];
