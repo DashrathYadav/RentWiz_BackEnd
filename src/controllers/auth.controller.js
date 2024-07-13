@@ -21,7 +21,7 @@ class AuthController {
           email: result.email,
           roleId: result.roleId,
         });
-        res.setHeader("Authorization", token);
+        res.setHeader("x-access-token", token);
 
         return apiResponse.successResponseWithData(
           res,
@@ -39,11 +39,6 @@ class AuthController {
     }
   }
 
-  /**
-   * User Registration.
-   * @param {model} user.validators
-   * @returns {Object}
-   */
   async userRegistration(req, res) {
     try {
       let deviceType = req.headers["device-type"];
@@ -51,14 +46,13 @@ class AuthController {
 
       var result = await authManager.userRegistration(req);
 
-      //If user created succesfully then login user
+      //If user created successfully then login user
       if (result.status === 201) {
-        //Login user after registration
-        return await new AuthController().userLogin(req, res);
+        return apiResponse.successResponse(res, "User registered successfully.");
       } else {
         // If user not created then return error
-        if (result.status == 400) {
-          return apiResponse.conflictRequest(res, result);
+        if (result.status === 400) {
+          return apiResponse.conflictRequest(res,result.message ,result);
         } else {
           return apiResponse.notAcceptableRequest(res, result);
         }

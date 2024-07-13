@@ -99,11 +99,6 @@ const validation = joi.object({
     }),
   profilePic: joi.string().empty(),
   document: joi.string().empty(),
-  address: joi.number().integer().required().empty().messages({
-    "number.empty": `{#key} cannot be an empty field`,
-    "number.integer": `{#key} must be an integer`,
-    "any.required": `{#key} is a required field`,
-  }),
   roleId: joi.number().integer().required().empty().messages({
     "number.empty": `{#key} cannot be an empty field`,
     "number.integer": `{#key} must be an integer`,
@@ -125,7 +120,6 @@ const userValidation = async (req, res, next) => {
     aadharNumber: req.body.aadharNumber,
     profilePic: req.body.profilePic,
     document: req.body.document,
-    address: req.body.address,
     roleId: req.body.roleId,
     note: req.body.note,
     isActive: req.body.isActive,
