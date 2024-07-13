@@ -122,12 +122,12 @@ class AuthManager {
 
       //save address in database and get the address data;
       let addressResult = await addressData.createAddress(newAddress);
-      const newCreatedAddress = addressResult[0];
+      const newCreatedAddressId = addressResult[0];
       //If address not created then return error
-      if (newCreatedAddress == null || newCreatedAddress == undefined) {
+      if (newCreatedAddressId == null) {
         return {
-          status: 500,
-          message: "Internal server error",
+          status: 400,
+          message: "Failed to create address",
         };
       }
 
@@ -140,12 +140,12 @@ class AuthManager {
         phoneNumber: req.body.phoneNumber,
         email: req.body.email,
         aadharNumber: req.body.aadharNumber,
-        //save pictue in some online storage and save the link here
+        //save picture in some online storage and save the link here
         profilePic: req.body.profilePic,
         //save document in some online storage and save the link here
         document: req.body.document,
         // create a address and store the address id here
-        address: newCreatedAddress.addressId,
+        address: newCreatedAddressId,
         roleId: req.body.roleId,
         note: req.body.note,
         isActive: true,
