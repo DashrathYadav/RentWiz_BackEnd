@@ -1,53 +1,57 @@
-"use strict";
+'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Users", {
-      userId: {
+    await queryInterface.createTable('Properties', {
+      propertyId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.BIGINT,
       },
-      loginId: {
-        type: Sequelize.STRING,
-        required: true,
-        unique: true,
-      },
-      password: {
+      propertyName: {
         type: Sequelize.STRING,
         required: true,
       },
-      newPassword: {
+      propertyType: {
         type: Sequelize.STRING,
       },
-      fullName: {
+      propertySize: {
         type: Sequelize.STRING,
+      },
+      propertyRent: {
+        type: Sequelize.DOUBLE,
+      },
+      propertyStatus: {
+        type: Sequelize.INTEGER,
         required: true,
+        reference: {
+            model: 'Availability_Status_LK',
+            key: 'statusId',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+        name: 'fk_property_status_id',
       },
-      mobileNumber: {
+      propertyPic: {
         type: Sequelize.STRING,
+      },
+      propertyDescription: {
+        type: Sequelize.STRING,
+      },
+      propertyFacility: {
+        type: Sequelize.STRING,
+      },
+      userId: {
+        type: Sequelize.BIGINT,
         required: true,
-        unique: true,
-      },
-      phoneNumber: {
-        type: Sequelize.STRING,
-        unique: true,
-      },
-      email: {
-        type: Sequelize.STRING,
-        required: true,
-        unique: true,
-      },
-      aadharNumber: {
-        type: Sequelize.STRING,
-        unique: true,
-      },
-      profilePic: {
-        type: Sequelize.STRING,
-      },
-      document: {
-        type: Sequelize.STRING,
+        reference: {
+          model: 'User',
+          key: 'userId',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+        name: 'fk_property_user_id',
       },
       addressId: {
         type: Sequelize.BIGINT,
@@ -60,23 +64,8 @@ module.exports = {
         onDelete: "SET NULL",
         name: "fk_user_address_id",
       },
-      roleId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "User_Role", // Name of the target model
-          key: "userRoleID", // Key in the target model
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-        name: "fk_user_role_id",
-      },
       note: {
         type: Sequelize.STRING,
-      },
-      isActive: {
-        type: Sequelize.BOOLEAN,
-        default: 0,
       },
       createdBy: {
         type: Sequelize.BIGINT,
@@ -86,15 +75,15 @@ module.exports = {
       },
       creationDate: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
+        defaultValue: Sequelize.NOW,
       },
       lastModificationdDate: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
+        defaultValue: Sequelize.NOW,
       },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Users");
-  },
+    await queryInterface.dropTable('Properties');
+  }
 };

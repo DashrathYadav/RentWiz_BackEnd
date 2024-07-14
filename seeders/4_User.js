@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.bulkInsert("users", [
+    return queryInterface.bulkInsert("Users", [
       {
         userId: 1,
         loginId: "john_doe",
@@ -16,7 +16,7 @@ module.exports = {
         aadharNumber: "123456789012",
         profilePic: "john_doe.jpg",
         document: "john_doe_doc.pdf",
-        address: 1,
+        addressId: 1,
         roleId: 1,
         note: "First user",
         isActive: true,
@@ -37,7 +37,7 @@ module.exports = {
         aadharNumber: "234567890123",
         profilePic: "jane_smith.jpg",
         document: "jane_smith_doc.pdf",
-        address: 2,
+        addressId: 2,
         roleId: 2,
         note: "Second user",
         isActive: true,
@@ -58,8 +58,8 @@ module.exports = {
         aadharNumber: "345678901234",
         profilePic: "alice_jones.jpg",
         document: "alice_jones_doc.pdf",
-        address: 3,
-        roleId: 3,
+        addressId: 3,
+        roleId: 2,
         note: "Third user",
         isActive: true,
         createdBy: 1,
@@ -79,8 +79,8 @@ module.exports = {
         aadharNumber: "456789012345",
         profilePic: "bob_brown.jpg",
         document: "bob_brown_doc.pdf",
-        address: 4,
-        roleId: 4,
+        addressId: 4,
+        roleId: 2,
         note: "Fourth user",
         isActive: true,
         createdBy: 1,
@@ -100,8 +100,8 @@ module.exports = {
         aadharNumber: "567890123456",
         profilePic: "charlie_davis.jpg",
         document: "charlie_davis_doc.pdf",
-        address: 5,
-        roleId: 5,
+        addressId: 5,
+        roleId: 2,
         note: "Fifth user",
         isActive: true,
         createdBy: 1,
@@ -113,6 +113,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete("users", null, {});
+    return queryInterface.bulkDelete("Users", null, {});
   },
 };
