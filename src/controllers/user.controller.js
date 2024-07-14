@@ -1,7 +1,6 @@
 const apiResponse = require("../helpers/apiResponse.js");
-const CommonManager = require("../manager/common.manager.js");
-const commonManager = new CommonManager();
-
+const { UserManager} = require("../manager/user.manager.js");
+const userManager = new UserManager();
 class UserController {
 
     //get user profile
@@ -9,12 +8,12 @@ class UserController {
         try {
             let deviceType = req.headers["device-type"];
             req.body.deviceType = deviceType;
-            var result = await commonManager.getUserInfo(req.UserId);
-            if (result != null && result.userID > 0) {
+            const user = await userManager.getProfile(req.userId);
+            if (user != null && user.userID > 0) {
                 return apiResponse.successResponseWithData(
                     res,
                     "Get user profile: success.",
-                    result
+                    user
                 );
             } else {
                 return apiResponse.notFoundResponse(

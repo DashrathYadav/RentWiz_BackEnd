@@ -5,9 +5,9 @@ const {user,address} = require("../../models");
 class UserData {
 
     //get user Profile/Info
-    async getUserInfo(userId) {
+    async getUserById(userId) {
         try {
-            const user = await user.findOne({
+            return  await user.findOne({
                 where: {
                     userId: userId,
                 },
@@ -15,10 +15,9 @@ class UserData {
                     exclude: ["password", "newPassword"],
                 },
                 include :{
-                    model: address,
+                    model: "Address",
                 }
             });
-            return user;
         } catch (error) {
             throw error;
         }

@@ -1,6 +1,6 @@
 const joi = require("joi");
-const apiResponse = require("../../helpers/apiResponse");
-const { addressPattern } = require("../../helpers/CONSTANTS/CustomRegexConst");
+const apiResponse = require("../../../helpers/apiResponse");
+const { addressPattern } = require("../../../helpers/CONSTANTS/CustomRegexConst");
 
 const Validation = joi.object({
   street: joi.string().pattern(addressPattern).empty().messages({
