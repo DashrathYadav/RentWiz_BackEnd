@@ -89,7 +89,7 @@ class AuthData {
         aadharNumber,
         profilePic,
         document,
-        address,
+        addressId,
         roleId,
         note,
         isActive,
@@ -99,31 +99,30 @@ class AuthData {
         lastModificationdDate,
       } = user;
       // sql query to insert user
-      const result = await db.query(
-        ` INSERT INTO ${Table.USERS} (loginId, password, fullName, mobileNumber, phoneNumber, email, aadharNumber, profilePic, document, address, roleId, note, isActive, createdBy, lastModifiedBy)
-          VALUES (:loginId, :password, :fullName, :mobileNumber, :phoneNumber, :email, :aadharNumber, :profilePic, :document, :address, :roleId, :note, :isActive, :createdBy, :lastModifiedBy)`,
-        {
-          replacements: {
-            loginId,
-            password,
-            fullName,
-            mobileNumber,
-            phoneNumber,
-            email,
-            aadharNumber,
-            profilePic,
-            document,
-            address,
-            roleId,
-            note,
-            isActive,
-            createdBy,
-            lastModifiedBy,
-          },
-          type: db.QueryTypes.INSERT,
-        }
+      return await db.query(
+          ` INSERT INTO ${Table.USERS} (loginId, password, fullName, mobileNumber, phoneNumber, email, aadharNumber, profilePic, document, addressId, roleId, note, isActive, createdBy, lastModifiedBy)
+          VALUES (:loginId, :password, :fullName, :mobileNumber, :phoneNumber, :email, :aadharNumber, :profilePic, :document, :addressId, :roleId, :note, :isActive, :createdBy, :lastModifiedBy)`,
+          {
+            replacements: {
+              loginId,
+              password,
+              fullName,
+              mobileNumber,
+              phoneNumber,
+              email,
+              aadharNumber,
+              profilePic,
+              document,
+              addressId,
+              roleId,
+              note,
+              isActive,
+              createdBy,
+              lastModifiedBy,
+            },
+            type: db.QueryTypes.INSERT,
+          }
       );
-      return result;
     } catch (error) {
       throw error;
     }

@@ -3,13 +3,13 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable(
-      "address",
+      "Addresses",
       {
         addressId: {
           allowNull: false,
           autoIncrement: true,
           primaryKey: true,
-          type: Sequelize.INTEGER,
+          type: Sequelize.BIGINT,
         },
         street: {
           type: Sequelize.STRING,
@@ -43,6 +43,6 @@ module.exports = {
     );
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("address");
+    await queryInterface.dropTable("Addresses");
   },
 };

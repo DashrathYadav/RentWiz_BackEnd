@@ -32,15 +32,15 @@ class AuthManager {
       if (
         // check if loginId is present in request body. if yes, get user by loginId
         req.body.loginId != null &&
-        req.body.loginId != "" &&
-        req.body.loginId != undefined
+        req.body.loginId !== "" &&
+        req.body.loginId !== undefined
       ) {
         userResult = await authData.getUserByLoginId(req.body.loginId);
       } else if (
         // check if email is present in request body. if yes, get user by email
         req.body.email != null &&
-        req.body.email != "" &&
-        req.body.email != undefined
+        req.body.email !== "" &&
+        req.body.email !== undefined
       ) {
         userResult = await authData.getUserByEmail(req.body.email);
       } else {
@@ -71,7 +71,7 @@ class AuthManager {
     } catch (error) {
       let errorLog = error.name + ": " + error.message;
       logger.error(errorLog);
-      logManager.generateAPILog(req, "", errorLog, 1);
+      await logManager.generateAPILog(req, "", errorLog, 1);
       throw error;
     }
   }
@@ -145,7 +145,7 @@ class AuthManager {
         //save document in some online storage and save the link here
         document: req.body.document,
         // create a address and store the address id here
-        address: newCreatedAddressId,
+        addressId: newCreatedAddressId,
         roleId: req.body.roleId,
         note: req.body.note,
         isActive: true,
@@ -171,7 +171,7 @@ class AuthManager {
     } catch (error) {
       let errorLog = error.name + ": " + error.message;
       logger.error(errorLog);
-      logManager.generateAPILog(req, "", errorLog, 1);
+      await logManager.generateAPILog(req, "", errorLog, 1);
       throw error;
     }
   }

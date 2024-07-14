@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("users", {
+    await queryInterface.createTable("Users", {
       userId: {
         allowNull: false,
         autoIncrement: true,
@@ -49,13 +49,27 @@ module.exports = {
       document: {
         type: Sequelize.STRING,
       },
-      address: {
-        type: Sequelize.INTEGER,
-        required: true,
+      addressId: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
+        references: {
+          model: "Address", // Name of the target model
+          key: "addressId", // Key in the target model
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+        name: "fk_user_address_id",
       },
       roleId: {
         type: Sequelize.INTEGER,
-        required: true,
+        allowNull: false,
+        references: {
+          model: "User_Role", // Name of the target model
+          key: "userRoleID", // Key in the target model
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+        name: "fk_user_role_id",
       },
       note: {
         type: Sequelize.STRING,
@@ -81,6 +95,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("users");
+    await queryInterface.dropTable("Users");
   },
 };

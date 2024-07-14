@@ -13,7 +13,7 @@ module.exports = {
      * }], {});
      */
 
-    return queryInterface.bulkInsert("user_roles", [
+    return queryInterface.bulkInsert("User_Roles", [
       {
         userRoleID: 1,
         userRole: "Admin",
@@ -34,6 +34,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    return queryInterface.bulkDelete("user_roles", null, {});
+    return queryInterface.bulkDelete("User_Roles", null, {});
   },
 };

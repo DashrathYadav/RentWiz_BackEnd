@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert("address", [
+    await queryInterface.bulkInsert("Addresses", [
       {
         addressId: 1,
         street: "123 Main St",
@@ -33,10 +33,30 @@ module.exports = {
         stateId: 3,
         countryId: 1,
       },
+      {
+        addressId: 4,
+        street: "101 Pine St",
+        landMark: "Near School",
+        area: "Outskirts",
+        cityId: 4,
+        pincode: 40004,
+        stateId: 4,
+        countryId: 1,
+      },
+      {
+        addressId: 5,
+        street: "202 Maple St",
+        landMark: "Opposite to Stadium",
+        area: "Downtown",
+        cityId: 5,
+        pincode: 50005,
+        stateId: 5,
+        countryId: 1,
+      },
     ]);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("address", null, {});
+    await queryInterface.bulkDelete("Addresses", null, {});
   },
 };
