@@ -29,6 +29,8 @@ exports.actionType = {
     
 };
 
+exports.tokenKey = "x-access-token";
+
 /**
  * Lookup Type Constant
  */

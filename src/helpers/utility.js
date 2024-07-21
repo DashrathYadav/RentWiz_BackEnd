@@ -6,6 +6,8 @@ const xml2js = require("xml2js");
 
 const mv = require("mv");
 const CryptoJS = require("crypto-js");
+const logger = require("./logger");
+const {generateAPILog} = require("../manager/log.manager");
 const config = process.env;
 
 /**
@@ -121,4 +123,11 @@ exports.convertToXML = (data) => {
 // get curent user id
 exports.getUserId = (req) => {
   return req.user.userId;
+};
+
+//log error
+exports.logError = (error) => {
+  let errorLog = error.name + ": " + error.message;
+  logger.error(errorLog);
+  generateAPILog(req, "", errorLog, 1);
 };
