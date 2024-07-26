@@ -31,6 +31,15 @@ exports.actionType = {
 
 exports.tokenKey = "x-access-token";
 
-/**
- * Lookup Type Constant
- */
+exports.maxPageSize = 100;
+
+exports.defaultPageSize = 10;
+
+exports.defaultPageNumber = 1;
+
+exports.Order = function getOrderMap(){
+    let orderMap = new Map();
+    orderMap.set('asc', 'ASC');
+    orderMap.set('desc', 'DESC');
+    return orderMap;
+}();

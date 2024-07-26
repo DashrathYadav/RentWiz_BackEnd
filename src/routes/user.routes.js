@@ -5,5 +5,5 @@ const verifyToken = require("../middlewares/auth");
 const userController = new UserController();
 
 router.get("/profile/:userId",verifyToken,userController.getUserProfile);
-router.get("/users",verifyToken,userController.getAllUser);
+router.get("/users",verifyToken,userController.getAllUserAndPaginationMetaData);
 module.exports = router;

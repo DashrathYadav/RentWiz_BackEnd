@@ -35,7 +35,7 @@ class UserController {
         }
     }
 
-    async getAllUser(req, res) {
+    async getAllUserAndPaginationMetaData(req, res) {
         try {
             let deviceType = req.headers["device-type"];
             req.body.deviceType = deviceType;
@@ -43,12 +43,15 @@ class UserController {
             const pageNumber = req.query.pageNumber;
             const filterStartsWith = req.query.filterStartsWith;
             const filterContains = req.query.filterContains;
-            const users = await userManager.getAllUser(pageNumber, pageSize,filterContains,filterStartsWith);
-            if (users != null && users.length > 0) {
+            const filterFields = req.query.filterFields;
+            const orderBy = req.query.orderBy;
+            const orderByField = req.query.orderByField;
+            const usersAndPaginationMetaData = await userManager.getAllUserAndPaginationMetaData(pageNumber, pageSize,filterContains,filterStartsWith,filterFields,orderBy,orderByField);
+            if (usersAndPaginationMetaData != null) {
                 return apiResponse.successResponseWithData(
                     res,
                     "Get all user: success.",
-                    users
+                    usersAndPaginationMetaData
                 );
             } else {
                 return apiResponse.notFoundResponse(

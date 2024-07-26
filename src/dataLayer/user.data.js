@@ -2,6 +2,7 @@ const db = require("../../config/database");
 const Table = require("../helpers/CONSTANTS/tableNameConst");
 const { User } = require('../../models');
 const { Op } = require('sequelize');
+const { getPaginationAndFilter } = require("../helpers/utility");
 
 class UserData {
 
@@ -18,34 +19,39 @@ class UserData {
         }
     }
 
-    async  getAllUser(pageNumber, pageSize, filterContains, filterStartsWith) {
+    async  getAllUserAndPaginationMetaData(pageNumber, pageSize, filterContains, filterStartsWith,filterFields,orderBy,orderByField) {
         try {
-            // Validate and log parameters
-            pageNumber = parseInt(pageNumber, 10);
-            pageSize = parseInt(pageSize, 10);
 
-            if (isNaN(pageNumber) || isNaN(pageSize)) {
-                throw new Error('Invalid pagination parameters');
-            }
-
-            console.log('Pagination - Page:', pageNumber, 'Size:', pageSize);
-            console.log('Filter Contains:', filterContains);
-
-            // Run query
-            const users = await User.findAll({
-                limit: pageSize,
-                offset: (pageNumber - 1) * pageSize,
-                where: {
-                    [Op.or]: [
-                        {fullName: {[Op.like]: `%${filterContains}%`}},
-                        {email: {[Op.like]: `%${filterContains}%`}},
-                        {mobileNumber: {[Op.like]: `%${filterContains}%`}},
-                        {loginId: {[Op.like]: `%${filterContains}%`}}
-                    ]
-                }
+            // Get pagination and filter
+            const {_pageSize,_pageNumber,_condition,_orderBy} = getPaginationAndFilter({
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+                filterContains: filterContains,
+                filterStartsWith: filterStartsWith,
+                filterFields: filterFields,
+                orderBy: orderBy,
             });
 
-            return users;
+            // Set default orderByField if not provided
+            const _orderByField = orderByField || 'userId';
+
+            // Run query
+            const result = await User.findAndCountAll({
+                where: _condition,
+                limit: _pageSize,
+                offset: (_pageNumber - 1) * _pageSize,
+                order: [[_orderByField, _orderBy]]
+            });
+
+            return {
+                users: result.rows,
+                totalItems: result.count,
+                totalPages: Math.ceil(result.count / _pageSize),
+                currentPage:_pageNumber,
+                pageSize: _pageSize,
+                filterContains: filterContains
+            };
+
         } catch (error) {
             console.error('Error in getAllUser:', error);
             throw error;

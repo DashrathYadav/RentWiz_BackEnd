@@ -27,11 +27,11 @@ class UserManager {
         }
     }
 
-    async getAllUser(pageNumber, pageSize,filterContains,filterStartsWith) {
+    async getAllUserAndPaginationMetaData(pageNumber, pageSize,filterContains,filterStartsWith,filterFields,orderBy,orderByField) {
         try {
-            let usersRes = null;
-            usersRes = await userData.getAllUser(pageNumber, pageSize,filterContains,filterStartsWith);
-            return (usersRes != null && usersRes.length > 0) ? usersRes : null;
+            let usersAndPaginationMetaData = null;
+            usersAndPaginationMetaData = await userData.getAllUserAndPaginationMetaData(pageNumber, pageSize,filterContains,filterStartsWith,filterFields,orderBy,orderByField);
+            return (usersAndPaginationMetaData != null) ? usersAndPaginationMetaData : null;
         } catch (error) {
             logError(error);
             throw error;
