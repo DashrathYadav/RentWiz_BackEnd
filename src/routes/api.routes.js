@@ -9,7 +9,7 @@ var app = express();
 
 app.use("/auth/", authRoutes);
 app.use("/user/", userRoutes);
-app.use("/common/", commonRoutes);
+//app.use("/common/", commonRoutes);
 
 
 

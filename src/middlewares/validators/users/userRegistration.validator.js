@@ -109,20 +109,21 @@ const validation = joi.object({
 });
 
 const userValidation = async (req, res, next) => {
-  const payload = {
-    loginId: req.body.loginId,
-    password: req.body.password,
-    newPassword: req.body.newPassword,
-    fullName: req.body.fullName,
-    mobileNumber: req.body.mobileNumber,
-    phoneNumber: req.body.phoneNumber,
-    email: req.body.email,
-    aadharNumber: req.body.aadharNumber,
-    profilePic: req.body.profilePic,
-    document: req.body.document,
-    roleId: req.body.roleId,
-    note: req.body.note,
-    isActive: req.body.isActive,
+  const user = req.body.user;
+    const payload = {
+    loginId: user.loginId,
+    password: user.password,
+    newPassword: user.newPassword,
+    fullName: user.fullName,
+    mobileNumber: user.mobileNumber,
+    phoneNumber: user.phoneNumber,
+    email: user.email,
+    aadharNumber: user.aadharNumber,
+    profilePic: user.profilePic,
+    document: user.document,
+    roleId: user.roleId,
+    note: user.note,
+    isActive: user.isActive,
   };
 
   const { error } = validation.validate(payload);

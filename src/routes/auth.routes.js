@@ -3,7 +3,7 @@ const express = require("express");
 // const loginValidation = require("../models/request/login.validator");
 const { AuthController } = require("../controllers/auth.controller");
 const userValidation = require("../middlewares/validators/users/userRegistration.validator");
-const addressValidation = require("../middlewares/address/address.validator");
+const addressValidation = require("../middlewares/validators/address/address.validator");
 
 const authController = new AuthController();
 const router = express.Router();

@@ -6,7 +6,11 @@ const xml2js = require("xml2js");
 
 const mv = require("mv");
 const CryptoJS = require("crypto-js");
+const logger = require("./logger");
+const {generateAPILog} = require("../manager/log.manager");
 const config = process.env;
+const { Op } = require('sequelize');
+const {maxPageSize, defaultPageSize, defaultPageNumber, Order} = require("./CONSTANTS/constants");
 
 /**
  * Function for generate rendom number.
@@ -121,4 +125,73 @@ exports.convertToXML = (data) => {
 // get curent user id
 exports.getUserId = (req) => {
   return req.user.userId;
+};
+
+//log error
+exports.logError = (error) => {
+  let errorLog = error.name + ": " + error.message;
+  logger.error(errorLog);
+  generateAPILog(req, "", errorLog, 1);
+};
+
+
+ exports.getPaginationAndFilter = (options = {}) => {
+  let {
+      pageNumber = 1,
+      pageSize = 10,
+      filterContains = '',
+      filterStartsWith = '',
+      filterFields = [],
+      orderBy = 'ASC',
+  } = options;
+
+   pageSize = parseInt(pageSize, 10);
+   pageNumber = parseInt(pageNumber, 10);
+
+   //sanitize pageNumber and pageSize
+   pageNumber = isNaN(pageNumber) ? defaultPageNumber : pageNumber;
+    pageSize = isNaN(pageSize) ? defaultPageSize : pageSize;
+    filterFields = Array.isArray(filterFields) ? filterFields : [filterFields];
+    orderBy = Order.get(orderBy) || Order.get('asc');
+
+   //default PageNumber
+   if(pageNumber < 1) {
+     pageNumber = defaultPageNumber;
+   }
+
+   //default PageSize
+   if(pageSize < 1) {
+     pageSize = defaultPageSize;
+   }
+
+    //max PageSize
+   if(pageSize > maxPageSize) {
+     pageSize = maxPageSize;
+   }
+
+
+  const filterCondition = [];
+
+  if (filterContains) {
+    filterFields.forEach(field => {
+        if(field !== '' || field !== undefined) {
+            filterCondition.push({[field]: {[Op.like]: `%${filterContains}%`}});
+        }
+    });
+  }
+
+  if (filterStartsWith) {
+    filterFields.forEach(field => {
+        if(field !== '' || field !== undefined) {
+            filterCondition.push({[field]: {[Op.like]: `${filterStartsWith}%`}});
+        }
+    });
+  }
+
+  return {
+      _pageSize: pageSize,
+      _pageNumber: pageNumber,
+      _condition: filterCondition.length > 0 ? {[Op.or]: filterCondition} : {},
+      _orderBy : orderBy
+  }
 };

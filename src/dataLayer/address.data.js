@@ -1,5 +1,6 @@
 const db = require("../../config/database");
 const Table = require("../helpers/CONSTANTS/tableNameConst");
+const { Address } = require('../../models');
 
 /**
  * Address Data.
@@ -7,20 +8,17 @@ const Table = require("../helpers/CONSTANTS/tableNameConst");
 class AddressData {
   /**
    * Get Address by Id.
-   * @param {Number} id
    * @returns {Object}
+   * @param addressId
    */
-  async getAddressById(id) {
+  async getAddressById(addressId) {
     //use sql query to get address by id
     try {
-      const address = await db.query(
-        `SELECT * FROM ${Table.ADDRESS} WHERE id = :id`,
-        {
-          replacements: { id },
-          type: db.QueryTypes.SELECT,
-        }
-      );
-      return address;
+      return (await Address.findOne({
+          where: {
+              addressId: addressId,
+          },
+      })).toJSON();
     } catch (error) {
       throw error;
     }
@@ -34,24 +32,39 @@ class AddressData {
   async createAddress(address) {
     //use sql query to create address
     try {
-      const { street, landMark, area, cityId, pincode, stateId, countryId } =
-        address;
-      const result = await db.query(
-        `INSERT INTO ${Table.ADDRESS} (street, landMark, area, cityId, pincode, stateId, countryId) VALUES (:street, :landMark, :area, :cityId, :pincode, :stateId, :countryId)`,
-        {
-          replacements: {
-            street,
-            landMark,
-            area,
-            cityId,
-            pincode,
-            stateId,
-            countryId,
-          },
-          type: db.QueryTypes.INSERT,
-        }
+
+      return (await Address.create(address)).toJSON();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Update Address.
+   * @param {Object} address
+   * @returns {Object}
+   */
+  async updateAddress(address) {
+    //use sql query to update address
+    try {
+      const {addressId, street, landMark, area, cityId, pincode, stateId, countryId} =
+          address;
+      return await db.query(
+          `UPDATE ${Table.ADDRESS} SET street = :street, landMark = :landMark, area = :area, cityId = :cityId, pincode = :pincode, stateId = :stateId, countryId = :countryId WHERE addressId = :addressId`,
+          {
+            replacements: {
+              addressId,
+              street,
+              landMark,
+              area,
+              cityId,
+              pincode,
+              stateId,
+              countryId,
+            },
+            type: db.QueryTypes.UPDATE,
+          }
       );
-      return result;
     } catch (error) {
       throw error;
     }

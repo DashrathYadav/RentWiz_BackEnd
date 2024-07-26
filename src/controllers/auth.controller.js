@@ -13,25 +13,19 @@ class AuthController {
     try {
       let deviceType = req.headers["device-type"];
       req.body.deviceType = deviceType;
-      var result = await authManager.userLogin(req);
-      if (result != null && result.userId > 0) {
+      var user = await authManager.userLogin(req);
+      if (user != null && user.userId > 0) {
         //If user login success then add bear token in response header
-        let token = JwtTokenHelper.getJwtToken({
-          userId: result.userId,
-          email: result.email,
-          roleId: result.roleId,
-        });
-        res.setHeader("x-access-token", token);
-
+        await authManager.addJwtToken(res, user);
         return apiResponse.successResponseWithData(
-          res,
-          "Login Success.",
-          result
+            res,
+            "Login Success.",
+            user
         );
       } else {
         return apiResponse.unauthorizedResponse(
-          res,
-          "loginId or Password wrong."
+            res,
+            "loginId or Password wrong."
         );
       }
     } catch (error) {
@@ -52,7 +46,7 @@ class AuthController {
       } else {
         // If user not created then return error
         if (result.status === 400) {
-          return apiResponse.conflictRequest(res,result.message ,result);
+          return apiResponse.conflictRequest(res, result.message, result);
         } else {
           return apiResponse.notAcceptableRequest(res, result);
         }

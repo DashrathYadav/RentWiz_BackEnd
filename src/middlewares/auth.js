@@ -6,8 +6,7 @@ const config = process.env;
 
 const verifyToken = async (req, res, next) => {
     //console.log(req.body);
-    let token =
-        req.body.token || req.query.token || req.headers["x-access-token"];
+    let token = req.headers["x-access-token"];
     req.body.deviceType = req.headers["device-type"];
     if (token && token.startsWith("Bearer ")) {
         token = token.slice(7, token.length);

@@ -1,6 +1,6 @@
 const joi = require("joi");
-const apiResponse = require("../../helpers/apiResponse");
-const { addressPattern } = require("../../helpers/CONSTANTS/CustomRegexConst");
+const apiResponse = require("../../../helpers/apiResponse");
+const { addressPattern } = require("../../../helpers/CONSTANTS/CustomRegexConst");
 
 const Validation = joi.object({
   street: joi.string().pattern(addressPattern).empty().messages({
@@ -38,14 +38,15 @@ const Validation = joi.object({
 
 const addressValidation = async (req, res, next) => {
   try {
+    const address = req.body.address;
     const payload = {
-      street: req.body.street,
-      landMark: req.body.landMark,
-      area: req.body.area,
-      cityId: req.body.cityId,
-      pincode: req.body.pincode,
-      stateId: req.body.stateId,
-      countryId: req.body.countryId,
+      street: address.street,
+      landMark: address.landMark,
+      area: address.area,
+      cityId: address.cityId,
+      pincode: address.pincode,
+      stateId: address.stateId,
+      countryId: address.countryId,
     };
 
     const { error } = Validation.validate(payload);
