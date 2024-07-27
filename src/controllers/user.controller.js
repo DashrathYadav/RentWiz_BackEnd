@@ -1,5 +1,6 @@
 const apiResponse = require("../helpers/apiResponse.js");
 const UserManager = require("../manager/user.manager.js");
+const {getPaginationAndFilterDataFromRequest} = require("../helpers/utility");
 const userManager = new UserManager();
 class UserController {
 
@@ -39,14 +40,9 @@ class UserController {
         try {
             let deviceType = req.headers["device-type"];
             req.body.deviceType = deviceType;
-            const pageSize = req.query.pageSize;
-            const pageNumber = req.query.pageNumber;
-            const filterStartsWith = req.query.filterStartsWith;
-            const filterContains = req.query.filterContains;
-            const filterFields = req.query.filterFields;
-            const orderBy = req.query.orderBy;
+            const paginationData = getPaginationAndFilterDataFromRequest(req);
             const orderByField = req.query.orderByField;
-            const usersAndPaginationMetaData = await userManager.getAllUserAndPaginationMetaData(pageNumber, pageSize,filterContains,filterStartsWith,filterFields,orderBy,orderByField);
+            const usersAndPaginationMetaData = await userManager.getAllUserAndPaginationMetaData(paginationData);
             if (usersAndPaginationMetaData != null) {
                 return apiResponse.successResponseWithData(
                     res,
