@@ -135,7 +135,7 @@ exports.logError = (error) => {
 };
 
 
- exports.getPaginationAndFilter = (options = {}) => {
+ exports.getSanitizedPaginationAndFilterCondition = (options = {}) => {
   let {
       pageNumber = 1,
       pageSize = 10,
@@ -195,3 +195,37 @@ exports.logError = (error) => {
       _orderBy : orderBy
   }
 };
+
+
+ exports.getPaginationAndFilterDataFromRequest=(req)=> {
+     const pageSize = req.query.pageSize;
+     const pageNumber = req.query.pageNumber;
+     const filterStartsWith = req.query.filterStartsWith;
+     const filterContains = req.query.filterContains;
+     const filterFields = req.query.filterFields;
+     const orderBy = req.query.orderBy;
+     const orderByField = req.query.orderByField;
+
+     return {
+         pageSize,
+         pageNumber,
+         filterStartsWith,
+         filterContains,
+         filterFields,
+         orderBy,
+         orderByField
+     };
+ }
+
+
+ exports.getPaginationMetaData =  (result,_pageSize,_pageNumber) => {
+        const totalRecords = result.count;
+        const totalPages = Math.ceil(totalRecords / _pageSize);
+     return {
+            pageSize: _pageSize,
+            pageNumber: _pageNumber,
+            totalRecords: totalRecords,
+            totalPages: totalPages,
+        };
+
+ }

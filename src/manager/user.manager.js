@@ -1,6 +1,4 @@
 const UserData = require("../dataLayer/user.data");
-const apiResponse = require("../helpers/apiResponse");
-const logger = require("../helpers/logger");
 const {logError} = require("../helpers/utility");
 const userData = new UserData();
 const AddressManager = require("./address.manager");
@@ -27,11 +25,10 @@ class UserManager {
         }
     }
 
-    async getAllUserAndPaginationMetaData(pageNumber, pageSize,filterContains,filterStartsWith,filterFields,orderBy,orderByField) {
+    async getAllUserAndPaginationMetaData(paginationData) {
         try {
-            let usersAndPaginationMetaData = null;
-            usersAndPaginationMetaData = await userData.getAllUserAndPaginationMetaData(pageNumber, pageSize,filterContains,filterStartsWith,filterFields,orderBy,orderByField);
-            return (usersAndPaginationMetaData != null) ? usersAndPaginationMetaData : null;
+            let usersAndPaginationMetaData = await userData.getAllUserAndPaginationMetaData(paginationData);
+            return usersAndPaginationMetaData != null || usersAndPaginationMetaData !== undefined ? usersAndPaginationMetaData : null;
         } catch (error) {
             logError(error);
             throw error;

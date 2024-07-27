@@ -1,8 +1,5 @@
-const db = require("../../config/database");
-const Table = require("../helpers/CONSTANTS/tableNameConst");
 const { User } = require('../../models');
-const { Op } = require('sequelize');
-const { getPaginationAndFilter } = require("../helpers/utility");
+const { getSanitizedPaginationAndFilterCondition, getPaginationMetaData} = require("../helpers/utility");
 
 class UserData {
 
@@ -19,21 +16,19 @@ class UserData {
         }
     }
 
-    async  getAllUserAndPaginationMetaData(pageNumber, pageSize, filterContains, filterStartsWith,filterFields,orderBy,orderByField) {
+    async  getAllUserAndPaginationMetaData(paginationData) {
         try {
 
             // Get pagination and filter
-            const {_pageSize,_pageNumber,_condition,_orderBy} = getPaginationAndFilter({
-                pageNumber: pageNumber,
-                pageSize: pageSize,
-                filterContains: filterContains,
-                filterStartsWith: filterStartsWith,
-                filterFields: filterFields,
-                orderBy: orderBy,
-            });
+            const {
+                _pageSize,
+                _pageNumber,
+                _condition,
+                _orderBy
+            } = getSanitizedPaginationAndFilterCondition(paginationData);
 
             // Set default orderByField if not provided
-            const _orderByField = orderByField || 'userId';
+            const _orderByField = paginationData.orderByField || 'userId';
 
             // Run query
             const result = await User.findAndCountAll({
@@ -45,11 +40,7 @@ class UserData {
 
             return {
                 users: result.rows,
-                totalItems: result.count,
-                totalPages: Math.ceil(result.count / _pageSize),
-                currentPage:_pageNumber,
-                pageSize: _pageSize,
-                filterContains: filterContains
+                paginationMetaData: getPaginationMetaData(result, _pageSize, _pageNumber),
             };
 
         } catch (error) {
