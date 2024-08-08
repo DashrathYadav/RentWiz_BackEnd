@@ -1,7 +1,9 @@
 const UserData = require("../dataLayer/user.data");
 const {logError} = require("../helpers/utility");
 const userData = new UserData();
+const PropertyManager = require("./property.manager");
 const AddressManager = require("./address.manager");
+const propertyManager = new PropertyManager();
 const addressManager = new AddressManager();
 
 class UserManager {
@@ -140,6 +142,19 @@ class UserManager {
 
             return userProfile;
 
+        } catch (error) {
+            logError(error);
+            throw error;
+        }
+    }
+
+    async getAllPropertiesPaginated(userId, paginationData) {
+        try {
+            //sanitizing the input
+            if (userId <= 0 || userId == null || userId === "" || isNaN(userId)) {
+                return null;
+            }
+            return await propertyManager.getAllPropertiesOfUserPaginated(userId, paginationData);
         } catch (error) {
             logError(error);
             throw error;

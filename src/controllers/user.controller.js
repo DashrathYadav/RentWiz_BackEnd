@@ -1,6 +1,7 @@
 const apiResponse = require("../helpers/apiResponse.js");
 const UserManager = require("../manager/user.manager.js");
-const {getPaginationAndFilterDataFromRequest} = require("../helpers/utility");
+const PropertyManager = require("../manager/property.manager.js");
+const {getPaginationAndFilterDataFromRequest, getUserId} = require("../helpers/utility");
 const userManager = new UserManager();
 class UserController {
 
@@ -175,6 +176,33 @@ class UserController {
                     res,
                     "Get all properties of user: success.",
                     properties
+                );
+            } else {
+                return apiResponse.notFoundResponse(
+                    res,
+                    "Properties not found."
+                )
+            }
+        } catch (error) {
+            return apiResponse.expectationFailedResponse(res, error);
+        }
+    }
+
+    async getAllPropertiesPaginated(req, res) {
+        try {
+            let deviceType = req.headers["device-type"];
+            req.body.deviceType = deviceType;
+            const userId = getUserId(req);
+            if (userId <= 0 || userId == null || userId === "" || isNaN(userId)) {
+                return apiResponse.validationErrorWithData(res, "Invalid user id.", {userId: userId});
+            }
+            const paginationData = getPaginationAndFilterDataFromRequest(req);
+            const propertiesAndPaginationMetaData = await userManager.getAllPropertiesPaginated(userId, paginationData);
+            if (propertiesAndPaginationMetaData != null) {
+                return apiResponse.successResponseWithData(
+                    res,
+                    "Get all properties of user: success.",
+                    propertiesAndPaginationMetaData
                 );
             } else {
                 return apiResponse.notFoundResponse(

@@ -55,13 +55,13 @@ class PropertyManager {
         }
     }
 
-    async getAllPropertiesOfUser(userId,pageNo,pageSize) {
+    async getAllPropertiesOfUserPaginated(userId,paginationData) {
         try {
             //sanitizing the input
             if (userId <= 0 || userId == null || userId === "" || isNaN(userId)) {
                 return null;
             }
-            return await propertyData.getAllPropertiesOfUser(userId,pageNo,pageSize);
+            return await propertyData.getAllPropertiesOfUserPaginated(userId,paginationData);
         } catch (error) {
             throw error;
         }

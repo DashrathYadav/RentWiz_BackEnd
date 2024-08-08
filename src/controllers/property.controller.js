@@ -7,6 +7,7 @@
 
 const apiResponse = require("../helpers/apiResponse.js");
 const PropertyManager = require("../manager/property.manager.js");
+const {getPaginationAndFilterDataFromRequest} = require("../helpers/utility");
 const propertyManager = new PropertyManager();
 
 class PropertyController {
@@ -94,7 +95,7 @@ class PropertyController {
         }
     }
 
-    async getAllPropertiesOfUser(req, res) {
+    async getAllPropertiesOfUserPaginated(req, res) {
         try {
             let deviceType = req.headers["device-type"];
             req.body.deviceType = deviceType;
@@ -102,10 +103,8 @@ class PropertyController {
             if (userId <= 0 || userId == null || userId === "" || isNaN(userId)) {
                 return apiResponse.validationErrorWithData(res, "Invalid user id.", {userId: userId});
             }
-            const pageSize = req.query.pageSize;
-            const pageNumber = req.query.pageNumber;
-
-            const properties = await propertyManager.getAllPropertiesOfUser(userId,pageNumber,pageSize);
+            const paginationData = getPaginationAndFilterDataFromRequest(req);
+            const properties = await propertyManager.getAllPropertiesOfUserPaginated(userId, paginationData);
             if (properties != null && properties.length > 0) {
                 return apiResponse.successResponseWithData(
                     res,
