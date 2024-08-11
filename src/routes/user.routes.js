@@ -10,6 +10,5 @@ router.get("/profile/:userId",verifyToken,userController.getUserProfile);
 router.get("/users",verifyToken,userController.getAllUserAndPaginationMetaData);
 router.get("/properties",verifyToken,userController.getAllPropertiesPaginated);
 router.post("/create",verifyToken,userValidation,addressValidation,userController.createUser);
-router.post("/update",verifyToken,userValidation,userController.updateUser);
-router.post("/deActivate/userId",verifyToken,userController.deActivateUserById);
+router.get("/deactivate/:userId",verifyToken,userController.deActivateUserById);
 module.exports = router;

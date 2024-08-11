@@ -82,31 +82,6 @@ class UserController {
         }
     }
 
-    async updateUser(req, res) {
-        try {
-            let deviceType = req.headers["device-type"];
-            req.body.deviceType = deviceType;
-            const user = req.body;
-            if (user == null || user === "") {
-                return apiResponse.validationErrorWithData(res, "Invalid user data.", {user: user});
-            }
-            const result = await userManager.updateUser(user);
-            if (result != null && result.status === 200) {
-                return apiResponse.successResponse(
-                    res,
-                    "User updated successfully."
-                );
-            } else {
-                return apiResponse.notAcceptableRequest(
-                    res,
-                    "User not updated."
-                )
-            }
-        } catch (error) {
-            return apiResponse.expectationFailedResponse(res, error);
-        }
-    }
-
     async deActivateUserById(req, res) {
         try {
             let deviceType = req.headers["device-type"];
@@ -115,8 +90,8 @@ class UserController {
             if (userId <= 0 || userId == null || userId === "" || isNaN(userId)) {
                 return apiResponse.validationErrorWithData(res, "Invalid user id.", {userId: userId});
             }
-            const result = await userManager.deActivateUserById(userId);
-            if (result != null && result.status === 200) {
+            const result = await userManager.deActivateUserById(userId,getUserId(req));
+            if (result != null && result[0] > 0) {
                 return apiResponse.successResponse(
                     res,
                     "User deactivated successfully."

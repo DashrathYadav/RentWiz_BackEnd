@@ -73,13 +73,18 @@ class UserManager {
         }
     }
 
-    async deActivateUserById(userId) {
+    async deActivateUserById(userId,modifiedBy) {
         try {
             //sanitizing the input
             if (userId <= 0 || userId == null || userId === "" || isNaN(userId)) {
                 return null;
             }
-            return await userData.deActivateUserById(userId);
+
+            if(modifiedBy <= 0 || modifiedBy == null || modifiedBy === "" || isNaN(modifiedBy)) {
+                return null;
+            }
+
+            return await userData.deActivateUserById(userId,modifiedBy);
 
         } catch (error) {
             logError(error);
@@ -185,32 +190,10 @@ class UserManager {
                 };
             }
 
-            //check if user already exists for given login ID
-            let userResult = null;
-            userResult = await this.getUserByLoginId(user.loginId);
-            if (userResult != null) {
-                return {
-                    status: 400,
-                    message: "User already exists with this login ID",
-                };
-            }
-
-            //check if user already exists for given email ID
-            userResult = await this.getUserByEmail(user.email);
-            if (userResult != null) {
-                return {
-                    status: 400,
-                    message: "User already exists with this email ID",
-                };
-            }
-
-            //check if user already exists for given mobile number
-            userResult = await this.getUserByMobileNumber(user.mobileNumber);
-            if (userResult != null) {
-                return {
-                    status: 400,
-                    message: "User already exists with this mobile number",
-                };
+            //check if user already exists
+            let userAlreadyExistsErr = await this.userAlreadyExistsThenErr(user);
+            if(userAlreadyExistsErr != null) {
+                return userAlreadyExistsErr;
             }
 
             //hash the password
@@ -280,6 +263,49 @@ class UserManager {
             let errorLog = error.name + ": " + error.message;
             logger.error(errorLog);
             await logManager.generateAPILog(req, "", errorLog, 1);
+            throw error;
+        }
+    }
+
+    async userAlreadyExistsThenErr(user) {
+        try {
+            //sanitizing the input
+            if (user == null || user === "" || user === undefined) {
+                return null;
+            }
+
+            //check if user already exists for given login ID
+            let userResult = null;
+            userResult = await this.getUserByLoginId(user.loginId);
+            if (userResult != null) {
+                return {
+                    status: 400,
+                    message: "User already exists with this login ID",
+                };
+            }
+
+            //check if user already exists for given email ID
+            userResult = await this.getUserByEmail(user.email);
+            if (userResult != null) {
+                return {
+                    status: 400,
+                    message: "User already exists with this email ID",
+                };
+            }
+
+            //check if user already exists for given mobile number
+            userResult = await this.getUserByMobileNumber(user.mobileNumber);
+            if (userResult != null) {
+                return {
+                    status: 400,
+                    message: "User already exists with this mobile number",
+                };
+            }
+
+            return null;
+
+        } catch (error) {
+            logError(error);
             throw error;
         }
     }
