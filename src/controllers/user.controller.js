@@ -65,21 +65,17 @@ class UserController {
         try {
             let deviceType = req.headers["device-type"];
             req.body.deviceType = deviceType;
-            const user = req.body;
-            if (user == null || user === "") {
-                return apiResponse.validationErrorWithData(res, "Invalid user data.", {user: user});
-            }
-            const result = await userManager.createUser(user);
-            if (result != null && result.status === 201) {
-                return apiResponse.successResponse(
-                    res,
-                    "User created successfully."
-                );
+            const result = await userManager.handleCreateUser(req);
+            //If user created successfully then login user
+            if (result.status === 201) {
+                return apiResponse.successResponseWithData(res, "User registered successfully.",result.data);
             } else {
-                return apiResponse.notAcceptableRequest(
-                    res,
-                    "User not created."
-                )
+                // If user not created then return error
+                if (result.status === 400) {
+                    return apiResponse.conflictRequest(res, result.message, result);
+                } else {
+                    return apiResponse.notAcceptableRequest(res, result);
+                }
             }
         } catch (error) {
             return apiResponse.expectationFailedResponse(res, error);
@@ -214,6 +210,7 @@ class UserController {
             return apiResponse.expectationFailedResponse(res, error);
         }
     }
+
 }
 
 module.exports = { UserController };
