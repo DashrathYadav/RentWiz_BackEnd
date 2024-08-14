@@ -50,19 +50,11 @@ class PropertyController {
             if (address == null || address === "") {
                 return apiResponse.validationErrorWithData(res, "Invalid address.", {address: address});
             }
-            const result = await propertyManager.createPropertyNAddress(property,address);
-            if (result != null && result.propertyId > 0) {
-                return apiResponse.successResponseWithData(
-                    res,
-                    "Create property: success.",
-                    result
-                );
-            } else {
-                return apiResponse.notFoundResponse(
-                    res,
-                    "Property not found."
-                )
+            const result = await propertyManager.handleCreateProperty(property, address);
+            if (result.status === 201) {
+                return apiResponse.successResponseWithData(res, "Property Created successfully.", result.data);
             }
+            return apiResponse.notAcceptableRequest(res, result);
         } catch (error) {
             return apiResponse.expectationFailedResponse(res, error);
         }

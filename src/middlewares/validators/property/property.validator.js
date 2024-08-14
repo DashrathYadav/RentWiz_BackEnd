@@ -20,7 +20,7 @@ const validation = joi.object({
     propertyPic: joi.string().empty(),
     propertyDescription: joi.string().empty(),
     propertyFacility: joi.string().empty(),
-    ownerId: joi.number().integer().required().empty().messages({
+    userId: joi.number().integer().required().empty().messages({
         "number.empty": `{#key} cannot be an empty field`,
         "number.integer": `{#key} must be an integer`,
         "any.required": `{#key} is a required field`,
@@ -30,14 +30,36 @@ const validation = joi.object({
 
 const propertyValidation = async (req, res, next) => {
     try {
-        const value = await validation.validateAsync(req.body);
-        next();
+        const property = req.body.property;
+        const payload = {
+            propertyName: property.propertyName,
+            propertyType: property.propertyType,
+            propertySize: property.propertySize,
+            propertyRent: property.propertyRent,
+            propertyStatus: property.propertyStatus,
+            propertyPic: property.propertyPic,
+            propertyDescription: property.propertyDescription,
+            propertyFacility: property.propertyFacility,
+            userId: property.userId,
+            note: property.note,
+        };
+        const { error } = validation.validate(payload);
+        if (error) {
+            return apiResponse.validationErrorWithData(
+                res,
+                "Validation Error.",
+                error.message
+            );
+        } else {
+            next();
+        }
     } catch (error) {
         return apiResponse.validationErrorWithData(
             res,
             "Validation Error.",
-            error.details[0].message
+            error.message
         );
     }
+};
 
-}
+module.exports = propertyValidation;

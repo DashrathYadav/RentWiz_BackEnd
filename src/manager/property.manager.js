@@ -21,23 +21,72 @@ class PropertyManager {
         }
     }
 
-    async createPropertyNAddress(property,address) {
+    async handleCreateProperty(property,address,loggedInUserId) {
         try {
             //sanitizing the input
             if (property == null || property === "" || property === undefined) {
-                return null;
+                return {
+                    status: 400,
+                    message: "Invalid  Property data",
+                };
             }
             if (address == null || address === "" || address === undefined) {
-                return null;
+                return {
+                    status: 400,
+                    message: "Invalid address data",
+                }
             }
             //create address
-            let addressRes = await addressManager.createAddress(address);
-            if (addressRes != null && addressRes.addressId > 0) {
-                property.addressId = addressRes.addressId;
-                return await propertyData.createProperty(property);
-            } else {
-                return null;
+            const newAddress = {
+                street: address.street,
+                landMark: address.landMark,
+                area: address.area,
+                cityId: address.cityId,
+                pincode: address.pincode,
+                stateId: address.stateId,
+                countryId: address.countryId,
+            };
+            let addressObj = await addressManager.createAddress(newAddress);
+            //If address not created then return error
+            if (addressObj == null || addressObj.addressId == null || addressObj.addressId <= 0) {
+                return {
+                    status: 400,
+                    message: "Failed to create address",
+                };
             }
+
+            //create property
+            const newProperty = {
+                propertyName: property.propertyName,
+                propertyType: property.propertyType,
+                propertySize: property.propertySize,
+                propertyRent: property.propertyRent,
+                propertyStatus: property.propertyStatus,
+                propertyPic: property.propertyPic,
+                propertyDescription: property.propertyDescription,
+                propertyFacility: property.propertyFacility,
+                userId: property.userId,
+                addressId: addressObj.addressId,
+                note: property.note,
+                createdBy: loggedInUserId,
+                lastModifiedBy: loggedInUserId,
+                creationDate: new Date(),
+                lastModificationdDate: new Date(),
+            };
+
+            let propertyObj = await propertyData.createProperty(newProperty);
+            if(propertyObj) {
+                return {
+                    status: 201,
+                    message: "Property created",
+                    data: propertyObj,
+                };
+            }
+            return {
+                status: 400,
+                message: "Failed to create property",
+            };
+
         } catch (error) {
             throw error;
         }
