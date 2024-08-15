@@ -16,7 +16,15 @@ const validation = joi.object({
     propertyType: joi.string().empty(),
     propertySize: joi.string().empty(),
     propertyRent: joi.number().empty(),
-    propertyStatus: joi.number().empty(),
+    currencyId: joi.number().integer().required().empty().messages({
+        "number.empty": `{#key} cannot be an empty field`,
+        "number.integer": `{#key} must be an integer`,
+        "any.required": `{#key} is a required field`,
+    }),
+    propertyStatus: joi.number().integer().empty().messages({
+        "number.empty": `{#key} cannot be an empty field`,
+        "number.integer": `{#key} must be an integer`,
+    }),
     propertyPic: joi.string().empty(),
     propertyDescription: joi.string().empty(),
     propertyFacility: joi.string().empty(),
@@ -36,6 +44,7 @@ const propertyValidation = async (req, res, next) => {
             propertyType: property.propertyType,
             propertySize: property.propertySize,
             propertyRent: property.propertyRent,
+            currencyId: property.currencyId,
             propertyStatus: property.propertyStatus,
             propertyPic: property.propertyPic,
             propertyDescription: property.propertyDescription,
@@ -43,7 +52,7 @@ const propertyValidation = async (req, res, next) => {
             userId: property.userId,
             note: property.note,
         };
-        const { error } = validation.validate(payload);
+        const {error} = validation.validate(payload);
         if (error) {
             return apiResponse.validationErrorWithData(
                 res,

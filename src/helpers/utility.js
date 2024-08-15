@@ -229,3 +229,15 @@ exports.logError = (error) => {
         };
 
  }
+
+ exports.IsNullOrEmpty = (value) => {
+    return value === undefined || value === null || value === '' || value=== "";
+ }
+
+ exports.IsNullOrWhiteSpace = (value) => {
+    return value === undefined || value === null || value.trim() === '' || value.trim() === "";
+ }
+
+ exports.IsInteger = (value) => {
+    return value === parseInt(value, 10);
+ }

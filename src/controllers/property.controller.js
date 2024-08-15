@@ -7,7 +7,7 @@
 
 const apiResponse = require("../helpers/apiResponse.js");
 const PropertyManager = require("../manager/property.manager.js");
-const {getPaginationAndFilterDataFromRequest} = require("../helpers/utility");
+const {getPaginationAndFilterDataFromRequest, getUserId, IsInteger} = require("../helpers/utility");
 const propertyManager = new PropertyManager();
 
 class PropertyController {
@@ -91,13 +91,13 @@ class PropertyController {
         try {
             let deviceType = req.headers["device-type"];
             req.body.deviceType = deviceType;
-            const userId = req.params.userId;
+            const userId = req.query.userId;
             if (userId <= 0 || userId == null || userId === "" || isNaN(userId)) {
                 return apiResponse.validationErrorWithData(res, "Invalid user id.", {userId: userId});
             }
             const paginationData = getPaginationAndFilterDataFromRequest(req);
             const properties = await propertyManager.getAllPropertiesOfUserPaginated(userId, paginationData);
-            if (properties != null && properties.length > 0) {
+            if (properties != null ) {
                 return apiResponse.successResponseWithData(
                     res,
                     "Get all properties of user: success.",
@@ -108,6 +108,43 @@ class PropertyController {
                     res,
                     "Properties not found."
                 )
+            }
+        } catch (error) {
+            return apiResponse.expectationFailedResponse(res, error);
+        }
+    }
+
+    async updateStatus(req, res) {
+        try {
+            let deviceType = req.headers["device-type"];
+            req.body.deviceType = deviceType;
+            const propertyId = req.body.propertyId;
+            const propertyUserId = req.body.userId;
+            const propertyStatus = req.body.propertyStatus;
+            if (!IsInteger(propertyId)) {
+                return apiResponse.validationErrorWithData(res, "Invalid property id.", {propertyId: propertyId});
+            }
+            if (!IsInteger(propertyUserId)) {
+                return apiResponse.validationErrorWithData(res, "Invalid user id.", {userId: propertyUserId});
+            }
+            if (!IsInteger(propertyStatus)) {
+                return apiResponse.validationErrorWithData(res, "Invalid status.", {propertyStatus: propertyStatus});
+            }
+
+            //get the id of the logged-in user who initiated the request.
+            const modifiedBy = getUserId(req);
+            const result = await propertyManager.updatePropertyStatus(propertyStatus,propertyId,propertyUserId,modifiedBy);
+            if (result != null && result[0] > 0) {
+                return apiResponse.successResponseWithData(
+                    res,
+                    "Updated property: success.",
+                    result
+                );
+            } else {
+                return apiResponse.notFoundResponse(
+                    res,
+                    "Failed to update Property.",
+                );
             }
         } catch (error) {
             return apiResponse.expectationFailedResponse(res, error);

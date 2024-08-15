@@ -1,4 +1,4 @@
-const { Property } = require('../../models');
+const { Property, User} = require('../../models');
 const {getSanitizedPaginationAndFilterCondition, getPaginationMetaData} = require("../helpers/utility");
 
 class PropertyData {
@@ -64,6 +64,23 @@ class PropertyData {
                 properties: result.rows,
                 paginationMetaData: getPaginationMetaData(result, _pageSize, _pageNumber),
             };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async updatePropertyStatus(propertyStatus,propertyId,propertyUserId,modifiedBy) {
+        try {
+            return await Property.update({
+                propertyStatus: propertyStatus,
+                lastModifiedBy:modifiedBy,
+                lastModificationdDate: new Date(),
+            }, {
+                where: {
+                    userId: propertyUserId,
+                    propertyId:propertyId
+                }
+            });
         } catch (error) {
             throw error;
         }

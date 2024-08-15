@@ -1,7 +1,7 @@
 const UserData = require("../dataLayer/user.data");
 const apiResponse = require("../helpers/apiResponse");
 const logger = require("../helpers/logger");
-const {logError} = require("../helpers/utility");
+const {logError, IsInteger} = require("../helpers/utility");
 const AddressManager = require("./address.manager");
 const addressManager = new AddressManager();
 const PropertyData = require("../dataLayer/property.data");
@@ -61,6 +61,7 @@ class PropertyManager {
                 propertyType: property.propertyType,
                 propertySize: property.propertySize,
                 propertyRent: property.propertyRent,
+                currencyId: property.currencyId,
                 propertyStatus: property.propertyStatus,
                 propertyPic: property.propertyPic,
                 propertyDescription: property.propertyDescription,
@@ -111,6 +112,25 @@ class PropertyManager {
                 return null;
             }
             return await propertyData.getAllPropertiesOfUserPaginated(userId,paginationData);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async updatePropertyStatus(propertyStatus ,propertyId,propertyUserId,modifiedBy) {
+        try {
+            //sanitizing the input
+            if (!IsInteger(propertyId)) {
+                return null;
+            }
+            if(!IsInteger(propertyUserId)) {
+                return null;
+            }
+            if(!IsInteger(propertyStatus)) {
+                return null;
+            }
+
+            return await propertyData.updatePropertyStatus(propertyStatus,propertyId,propertyUserId,modifiedBy);
         } catch (error) {
             throw error;
         }

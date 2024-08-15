@@ -32,6 +32,13 @@ module.exports = (sequelize, DataTypes) => {
             },
             as: "Availability_Status_LK",
         });
+        Property.belongsTo(models.Currency_LK, {
+            foreignKey: {
+            name: "fk_currency_id",
+            field: "currencyId",
+            },
+            as: "Currency_LK",
+        });
     }
   }
   Property.init({
@@ -48,8 +55,16 @@ module.exports = (sequelize, DataTypes) => {
         propertyType: DataTypes.STRING,
         propertySize: DataTypes.STRING,
         propertyRent: DataTypes.DOUBLE,
+        currencyId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          reference : {
+            model: 'Currency_LK',
+            key: 'currencyId'
+          },
+        },
         propertyStatus: {
-          type: DataTypes.STRING,
+          type: DataTypes.INTEGER,
           allowNull: false,
           reference : {
             model: 'Availability_Status_LK',
