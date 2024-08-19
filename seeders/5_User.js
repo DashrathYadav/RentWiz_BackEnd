@@ -1,5 +1,6 @@
 "use strict";
 
+const securePassword = require("../src/helpers/securePassword");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -7,7 +8,7 @@ module.exports = {
       {
         userId: 1,
         loginId: "john_doe",
-        password: "password123",
+        password: await securePassword("password123"),
         newPassword: "newpassword123",
         fullName: "John Doe",
         mobileNumber: "1234567890",
@@ -28,7 +29,7 @@ module.exports = {
       {
         userId: 2,
         loginId: "jane_smith",
-        password: "password456",
+        password: await securePassword("password456"),
         newPassword: "newpassword456",
         fullName: "Jane Smith",
         mobileNumber: "2345678901",
@@ -49,7 +50,7 @@ module.exports = {
       {
         userId: 3,
         loginId: "alice_jones",
-        password: "password789",
+        password: await securePassword("password789"),
         newPassword: "newpassword789",
         fullName: "Alice Jones",
         mobileNumber: "3456789012",
@@ -70,7 +71,7 @@ module.exports = {
       {
         userId: 4,
         loginId: "bob_brown",
-        password: "password101",
+        password: await securePassword("password101"),
         newPassword: "newpassword101",
         fullName: "Bob Brown",
         mobileNumber: "4567890123",
@@ -91,7 +92,7 @@ module.exports = {
       {
         userId: 5,
         loginId: "charlie_davis",
-        password: "password202",
+        password: await securePassword("password202"),
         newPassword: "newpassword202",
         fullName: "Charlie Davis",
         mobileNumber: "5678901234",

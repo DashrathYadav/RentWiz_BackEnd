@@ -11,6 +11,15 @@ const {generateAPILog} = require("../manager/log.manager");
 const config = process.env;
 const { Op } = require('sequelize');
 const {maxPageSize, defaultPageSize, defaultPageNumber, Order} = require("./CONSTANTS/constants");
+const {StatusCodes} = require("http-status-codes");
+const {
+    validationErrorWithData,
+    notFoundResponse,
+    unauthorizedResponse,
+    notAcceptableRequest,
+    forbiddenRequest,
+    ErrorResponse, conflictRequest
+} = require("./apiResponse");
 
 /**
  * Function for generate rendom number.
@@ -241,3 +250,36 @@ exports.logError = (error) => {
  exports.IsInteger = (value) => {
     return value === parseInt(value, 10);
  }
+
+exports.ApiErrorResponse = function (res,error)
+{
+    if(error.statusCode && error.statusCode >=400 && error.statusCode<500)
+    {
+        switch (error.statusCode)
+        {
+            case StatusCodes.BAD_REQUEST:
+                validationErrorWithData(res,error.message,error.data)
+                break;
+            case StatusCodes.NOT_FOUND:
+                notFoundResponse(res,error.message)
+                break;
+            case StatusCodes.UNAUTHORIZED:
+                unauthorizedResponse(res,error.message)
+                break;
+            case StatusCodes.NOT_ACCEPTABLE:
+                notAcceptableRequest(res,error.message)
+                break;
+            case StatusCodes.FORBIDDEN:
+                forbiddenRequest(res,error.message)
+                break;
+            case StatusCodes.CONFLICT:
+                conflictRequest(res,error.message,error.data)
+                break;
+            default:
+                validationErrorWithData(res,error.message,error.data)
+        }
+    }
+    else{
+        ErrorResponse(res,error.message)
+    }
+}

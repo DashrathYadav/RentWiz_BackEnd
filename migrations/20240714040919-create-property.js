@@ -80,9 +80,11 @@ module.exports = {
       },
       createdBy: {
         type: Sequelize.BIGINT,
+        required: true,
       },
       lastModifiedBy: {
         type: Sequelize.BIGINT,
+        required: true,
       },
       creationDate: {
         type: Sequelize.DATE,
