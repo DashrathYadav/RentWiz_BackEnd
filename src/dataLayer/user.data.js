@@ -116,6 +116,22 @@ class UserData {
             throw error;
         }
     }
+
+    async deActivateUserById(userId, modifiedBy) {
+        try {
+            return await User.update({
+                isActive: false,
+                lastModifiedBy:modifiedBy,
+                lastModificationdDate: new Date(),
+            }, {
+                where: {
+                    userId: userId
+                }
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports =  UserData ;

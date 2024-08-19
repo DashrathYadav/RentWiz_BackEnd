@@ -80,17 +80,19 @@ module.exports = {
       },
       createdBy: {
         type: Sequelize.BIGINT,
+        required: true,
       },
       lastModifiedBy: {
         type: Sequelize.BIGINT,
+        required: true,
       },
       creationDate: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
+        defaultValue: Sequelize.NOW,
       },
       lastModificationdDate: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
+        defaultValue: Sequelize.NOW,
       },
     });
   },

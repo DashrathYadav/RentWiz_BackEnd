@@ -1,6 +1,7 @@
 const apiResponse = require("../helpers/apiResponse.js");
 const UserManager = require("../manager/user.manager.js");
-const {getPaginationAndFilterDataFromRequest} = require("../helpers/utility");
+const PropertyManager = require("../manager/property.manager.js");
+const {getPaginationAndFilterDataFromRequest, getUserId} = require("../helpers/utility");
 const userManager = new UserManager();
 class UserController {
 
@@ -64,46 +65,17 @@ class UserController {
         try {
             let deviceType = req.headers["device-type"];
             req.body.deviceType = deviceType;
-            const user = req.body;
-            if (user == null || user === "") {
-                return apiResponse.validationErrorWithData(res, "Invalid user data.", {user: user});
-            }
-            const result = await userManager.createUser(user);
-            if (result != null && result.status === 201) {
-                return apiResponse.successResponse(
-                    res,
-                    "User created successfully."
-                );
+            const result = await userManager.handleCreateUser(req);
+            //If user created successfully then login user
+            if (result.status === 201) {
+                return apiResponse.successResponseWithData(res, "User registered successfully.",result.data);
             } else {
-                return apiResponse.notAcceptableRequest(
-                    res,
-                    "User not created."
-                )
-            }
-        } catch (error) {
-            return apiResponse.expectationFailedResponse(res, error);
-        }
-    }
-
-    async updateUser(req, res) {
-        try {
-            let deviceType = req.headers["device-type"];
-            req.body.deviceType = deviceType;
-            const user = req.body;
-            if (user == null || user === "") {
-                return apiResponse.validationErrorWithData(res, "Invalid user data.", {user: user});
-            }
-            const result = await userManager.updateUser(user);
-            if (result != null && result.status === 200) {
-                return apiResponse.successResponse(
-                    res,
-                    "User updated successfully."
-                );
-            } else {
-                return apiResponse.notAcceptableRequest(
-                    res,
-                    "User not updated."
-                )
+                // If user not created then return error
+                if (result.status === 400) {
+                    return apiResponse.conflictRequest(res, result.message, result);
+                } else {
+                    return apiResponse.notAcceptableRequest(res, result);
+                }
             }
         } catch (error) {
             return apiResponse.expectationFailedResponse(res, error);
@@ -118,8 +90,8 @@ class UserController {
             if (userId <= 0 || userId == null || userId === "" || isNaN(userId)) {
                 return apiResponse.validationErrorWithData(res, "Invalid user id.", {userId: userId});
             }
-            const result = await userManager.deActivateUserById(userId);
-            if (result != null && result.status === 200) {
+            const result = await userManager.deActivateUserById(userId,getUserId(req));
+            if (result != null && result[0] > 0) {
                 return apiResponse.successResponse(
                     res,
                     "User deactivated successfully."
@@ -186,6 +158,34 @@ class UserController {
             return apiResponse.expectationFailedResponse(res, error);
         }
     }
+
+    async getAllPropertiesPaginated(req, res) {
+        try {
+            let deviceType = req.headers["device-type"];
+            req.body.deviceType = deviceType;
+            const userId = getUserId(req);
+            if (userId <= 0 || userId == null || userId === "" || isNaN(userId)) {
+                return apiResponse.validationErrorWithData(res, "Invalid user id.", {userId: userId});
+            }
+            const paginationData = getPaginationAndFilterDataFromRequest(req);
+            const propertiesAndPaginationMetaData = await userManager.getAllPropertiesPaginated(userId, paginationData);
+            if (propertiesAndPaginationMetaData != null) {
+                return apiResponse.successResponseWithData(
+                    res,
+                    "Get all properties of user: success.",
+                    propertiesAndPaginationMetaData
+                );
+            } else {
+                return apiResponse.notFoundResponse(
+                    res,
+                    "Properties not found."
+                )
+            }
+        } catch (error) {
+            return apiResponse.expectationFailedResponse(res, error);
+        }
+    }
+
 }
 
 module.exports = { UserController };
