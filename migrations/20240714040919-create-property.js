@@ -22,6 +22,17 @@ module.exports = {
       propertyRent: {
         type: Sequelize.DOUBLE,
       },
+        currencyId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            reference: {
+                model: 'Currency_LK',
+                key: 'currencyId',
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL',
+            name: 'fk_property_currency_id',
+        },
       propertyStatus: {
         type: Sequelize.INTEGER,
         required: true,
@@ -69,9 +80,11 @@ module.exports = {
       },
       createdBy: {
         type: Sequelize.BIGINT,
+        required: true,
       },
       lastModifiedBy: {
         type: Sequelize.BIGINT,
+        required: true,
       },
       creationDate: {
         type: Sequelize.DATE,

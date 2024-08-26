@@ -168,14 +168,14 @@ exports.forbiddenRequest = function (res, msg) {
  * Conflict response with Message.
  * @returns {Json}
  */
-exports.conflictRequest = function (res, msg,data) {
+exports.conflictRequest = function (res, msg,Data) {
 	var data = {
 		success: false,
 		statusCode: StatusCodes.CONFLICT,
 		status: ReasonPhrases.CONFLICT,
 
 		message: msg,
-        data:data
+        data:Data
 	};
 	return res.status(StatusCodes.CONFLICT).json(data);
 };

@@ -103,7 +103,7 @@ class AuthManager {
       //check if user already exists for given login ID
       let userResult = null;
       userResult = await userManager.getUserByLoginId(user.loginId);
-      if (userResult && userResult.length > 0) {
+      if (userResult != null){
         return {
           status: 400,
           message: "User already exists with this login ID",
@@ -112,7 +112,7 @@ class AuthManager {
 
       //check if user already exists for given email ID
       userResult = await userManager.getUserByEmail(user.email);
-      if (userResult && userResult.length > 0) {
+      if (userResult != null) {
         return {
           status: 400,
           message: "User already exists with this email ID",
@@ -121,7 +121,7 @@ class AuthManager {
 
       //check if user already exists for given mobile number
       userResult = await userManager.getUserByMobileNumber(user.mobileNumber);
-      if (userResult && userResult.length > 0) {
+      if (userResult != null) {
         return {
           status: 400,
           message: "User already exists with this mobile number",
