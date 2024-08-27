@@ -92,11 +92,11 @@ module.exports = (sequelize, DataTypes) => {
         note: DataTypes.STRING,
         deposited: DataTypes.DOUBLE,
         returnDeposite: DataTypes.DOUBLE,
-        startDate: {
+        boardingDate: {
             type: DataTypes.DATE,
             allowNull: false
         },
-        endDate: DataTypes.DATE,
+        leavingDate: DataTypes.DATE,
         userId: {
             type: DataTypes.BIGINT,
             allowNull: false,
@@ -120,6 +120,11 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'Room',
                 key: 'roomId'
             }
+        },
+        password:{
+            type: DataTypes.STRING,
+            require:true,
+            allowNull:false
         },
         createdBy: {
             type: DataTypes.BIGINT,
