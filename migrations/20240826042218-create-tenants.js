@@ -56,12 +56,12 @@ module.exports = {
             note: Sequelize.STRING,
             deposited: Sequelize.DOUBLE,
             returnDeposite: Sequelize.DOUBLE,
-            startDate: {
+            boardingDate: {
                 type: Sequelize.DATE,
                 required: true,
                 defaultValue: Sequelize.NOW,
             },
-            endDate: Sequelize.DATE,
+            leavingDate: Sequelize.DATE,
             userId: {
                 type: Sequelize.BIGINT,
                 required: true,
@@ -94,6 +94,11 @@ module.exports = {
                 onUpdate: "CASCADE",
                 onDelete: "SET NULL",
                 name: "fk_tenant_room_id",
+            },
+            password:{
+                type: Sequelize.STRING,
+                allowNull: false,
+                required:true
             },
             createdBy: {
                 type: Sequelize.BIGINT,
