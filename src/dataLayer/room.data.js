@@ -22,7 +22,7 @@ class RoomData {
 
     async getRoomById(roomId) {
         try {
-            return await Room.findByPk(roomId);
+            return (await Room.findByPk(roomId))?.toJSON();
         } catch (error) {
             throw error;
         }

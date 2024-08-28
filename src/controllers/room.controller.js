@@ -13,21 +13,21 @@ class RoomController {
             const room = await roomManager.handleRoomCreate(roomData,createdBy);
             return apiResponse.successResponseWithData(res, "Room created successfully.", room);
         } catch (error) {
-            return ApiErrorResponse(res,error,);
+            return ApiErrorResponse(res,error);
         }
     }
 
     async getRoomById(req, res) {
         try {
             const roomId = req.params.roomId;
-            const room = await RoomManager.getRoomById(roomId);
+            const room = await roomManager.getRoomById(roomId);
             if (room) {
                 return apiResponse.successResponseWithData(res, "Room fetched successfully.", room);
             } else {
                 return apiResponse.notFoundResponse(res, "Room not found.");
             }
         } catch (error) {
-            return apiResponse.expectationFailedResponse(res, error);
+            return ApiErrorResponse(res,error);
         }
     }
 

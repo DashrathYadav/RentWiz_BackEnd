@@ -7,5 +7,5 @@ const roomValidation = require("../middlewares/validators/room/room.validator");
 const roomController = new RoomController();
 
 router.post("/create",verifyToken,roomValidation,roomController.createRoom);
-
+router.get("/:roomId",verifyToken,roomController.getRoomById);
 module.exports = router;
