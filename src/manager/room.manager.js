@@ -2,7 +2,7 @@
 
 const RoomData = require('../dataLayer/room.data');
 const PropertyData = require("../dataLayer/property.data");
-const {IsNullOrEmpty} = require("../helpers/utility");
+const {IsNullOrEmpty, IsInteger} = require("../helpers/utility");
 const {ClientError} = require("../helpers/CustomError");
 const {ExceptionHandler} = require("winston");
 const propertyData = new PropertyData();
@@ -55,7 +55,16 @@ class RoomManager {
     }
 
     async getRoomById(roomId) {
-        return await RoomData.getRoomById(roomId);
+        try {
+            // sanitize received input and validate
+            if (!IsInteger(roomId)) {
+                throw new ClientError("Invalid RoomId cannot be null or empty or non Integer", 400, roomId);
+            }
+            return await roomdata.getRoomById(roomId);
+        }
+        catch (error) {
+            throw error;
+        }
     }
 
     async getAllRoomsOfPropertyPaginated(propertyId, paginationData) {

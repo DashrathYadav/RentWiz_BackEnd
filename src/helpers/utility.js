@@ -248,6 +248,10 @@ exports.logError = (error) => {
  }
 
  exports.IsInteger = (value) => {
+    return !isNaN(parseInt(value, 10));
+ }
+
+ exports.IsLong = (value) => {
     return value === parseInt(value, 10);
  }
 
